@@ -5,12 +5,6 @@
     "keywords": [
         "ibexa-dxp"
     ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://updates.ibexa.co"
-        }
-    ],
     "require": {
         "php": "^7.4 || ^8.0",
         "ibexa/core": "~4.6.x-dev",
@@ -31,12 +25,17 @@
         "ibexa/doctrine-schema": "~4.6.x-dev",
         "ibexa/phpstan": "~4.6.x-dev",
         "ibexa/test-core": "~4.6.x-dev",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.2",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^9",
         "qossmic/deptrac-shim": "^0.24.0 || ^1.0.2",
-        "symfony/phpunit-bridge": "^5.4"
+        "symfony/amazon-sqs-messenger": "^5.4",
+        "symfony/beanstalkd-messenger": "^5.4",
+        "symfony/phpunit-bridge": "^5.4",
+        "symfony/redis-messenger": "^5.4"
     },
     "autoload": {
         "psr-4": {
@@ -56,6 +55,7 @@
         "fix-cs": "php-cs-fixer fix --config=.php-cs-fixer.php --show-progress=dots",
         "check-cs": "@fix-cs --dry-run",
         "test": "phpunit -c phpunit.xml.dist",
+        "test-integration": "phpunit -c phpunit.integration.xml",
         "phpstan": "phpstan analyse -c phpstan.neon",
         "deptrac": "php vendor/bin/deptrac analyse"
     },

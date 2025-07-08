@@ -1,0 +1,31 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$mergedConfig \(array\{transport_dsn\: string, deduplication_lock_storage\: array\{enabled\: bool, type\: string, dsn\: string\|null, service\: string\|null\}\}\) of method Ibexa\\Bundle\\Messenger\\DependencyInjection\\IbexaMessengerExtension\:\:loadInternal\(\) should be contravariant with parameter \$mergedConfig \(array\) of method Symfony\\Component\\HttpKernel\\DependencyInjection\\ConfigurableExtension\:\:loadInternal\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/bundle/DependencyInjection/IbexaMessengerExtension.php
+
+		-
+			message: '#^Method Ibexa\\Bundle\\Messenger\\Transport\\Sender\\SendersLocator\:\:listTypes\(\) should return array\<class\-string\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/bundle/Transport/Sender/SendersLocator.php
+
+		-
+			message: '#^Cannot call method import\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/integration/bootstrap.php
+
+		-
+			message: '#^Cannot call method importSchema\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/integration/bootstrap.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: tests/integration/bootstrap.php

@@ -1,0 +1,70 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    ibexa.messenger.bus:
+        class: Symfony\Component\Messenger\MessageBus
+        tags:
+            - messenger.bus
+        arguments:
+            - !abstract defined in Symfony\Component\Messenger\DependencyInjection\MessengerPass
+
+    ibexa.messenger.transport_factory:
+        class: Symfony\Component\Messenger\Transport\TransportFactory
+        arguments:
+            - !tagged_iterator ibexa.messenger.transport_factory
+
+    ibexa.messenger.transport.amqp.factory:
+        class: Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransportFactory
+
+    ibexa.messenger.transport.redis.factory:
+        class: Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransportFactory
+
+    ibexa.messenger.messenger.transport.sqs.factory:
+        class: Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsTransportFactory
+        arguments:
+            - '@?logger'
+        tags:
+            - { name: 'monolog.logger', channel: 'messenger' }
+
+    ibexa.messenger.transport.beanstalkd.factory:
+        class: Symfony\Component\Messenger\Bridge\Beanstalkd\Transport\BeanstalkdTransportFactory
+
+    messenger.transport.ibexa.messenger.transport:
+        class: Symfony\Component\Messenger\Transport\TransportInterface
+        factory: ['@messenger.transport_factory', createTransport]
+        arguments:
+            - '%ibexa.messenger.transport_dsn%'
+            - transport_name: ibexa.messenger.transport
+            - '@ibexa.messenger.serializer'
+        tags:
+            -   name: messenger.receiver
+                alias: ibexa.messenger.transport
+                is_failure_transport: false
+
+    Ibexa\Bundle\Messenger\Middleware\SudoMiddleware: ~
+
+    Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware:
+        arguments:
+            - '@ibexa.messenger.lock_factory'
+
+    Ibexa\Bundle\Messenger\Transport\Sender\SendersLocator:
+        decorates: 'messenger.senders_locator'
+        decoration_on_invalid: null
+        arguments:
+            $sender: '@messenger.transport.ibexa.messenger.transport'
+
+    Ibexa\Contracts\Messenger\Transport\MessageProviderInterface:
+        alias: Ibexa\Bundle\Messenger\Transport\MessageProviderRegistry
+
+    Ibexa\Bundle\Messenger\Transport\MessageProviderRegistry:
+        autoconfigure: false
+        arguments:
+            $providers: !tagged_iterator ibexa.messenger.sender_message_provider
+
+    ibexa.messenger.serializer:
+        class: Symfony\Component\Messenger\Transport\Serialization\PhpSerializer
+        # class: Symfony\Component\Messenger\Transport\Serialization\Serializer
+        # factory: [Symfony\Component\Messenger\Transport\Serialization\Serializer, 'create']
