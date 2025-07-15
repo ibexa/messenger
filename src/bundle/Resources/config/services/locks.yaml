@@ -12,8 +12,8 @@ services:
     ibexa.messenger.lock_store.dbal:
         class: Symfony\Component\Lock\Store\DoctrineDbalStore
         arguments:
-            - '@ibexa.messenger.doctrine_connection'
+            - '@ibexa.messenger.lock_store.dbal.doctrine_connection'
             - db_table: ibexa_messenger_lock_keys
 
-    ibexa.messenger.doctrine_connection:
-        parent: 'doctrine.dbal.default_connection'
+    ibexa.messenger.lock_store.dbal.doctrine_connection:
+        parent: 'ibexa.persistence.connection'

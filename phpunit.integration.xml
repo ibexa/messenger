@@ -15,7 +15,7 @@
 
         <!-- Test-only environment variables -->
         <env name="TEST_IBEXA_MESSENGER_TRANSPORT_DSN" value="doctrine://default?table_name=ibexa_messenger_messages&amp;auto_setup=false" />
-        <env name="TEST_IBEXA_MESSENGER_LOCK_DSN" value="redis://redis.messenger_default:6379" />
+        <!-- <env name="TEST_IBEXA_MESSENGER_LOCK_DSN" value="redis://redis.messenger_default:6379" />-->
     </php>
     <testsuites>
         <testsuite name="integration">

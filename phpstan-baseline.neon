@@ -7,6 +7,12 @@ parameters:
 			path: src/bundle/DependencyInjection/IbexaMessengerExtension.php
 
 		-
+			message: '#^Parameter \#1 \$data \(array\{key\: string, ttl\?\: float\|null, only_deduplicate_in_queue\?\: bool\|null\}\) of method Ibexa\\Bundle\\Messenger\\Serializer\\Normalizer\\DeduplicateStampNormalizer\:\:denormalize\(\) should be contravariant with parameter \$data \(mixed\) of method Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface\:\:denormalize\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/bundle/Serializer/Normalizer/DeduplicateStampNormalizer.php
+
+		-
 			message: '#^Method Ibexa\\Bundle\\Messenger\\Transport\\Sender\\SendersLocator\:\:listTypes\(\) should return array\<class\-string\> but returns array\.$#'
 			identifier: return.type
 			count: 1

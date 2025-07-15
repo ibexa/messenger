@@ -63,8 +63,3 @@ services:
         autoconfigure: false
         arguments:
             $providers: !tagged_iterator ibexa.messenger.sender_message_provider
-
-    ibexa.messenger.serializer:
-        class: Symfony\Component\Messenger\Transport\Serialization\PhpSerializer
-        # class: Symfony\Component\Messenger\Transport\Serialization\Serializer
-        # factory: [Symfony\Component\Messenger\Transport\Serialization\Serializer, 'create']
