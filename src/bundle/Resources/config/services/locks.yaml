@@ -16,4 +16,4 @@ services:
             - db_table: ibexa_messenger_lock_keys
 
     ibexa.messenger.doctrine_connection:
-        parent: 'doctrine.dbal.connection'
+        parent: 'doctrine.dbal.default_connection'
