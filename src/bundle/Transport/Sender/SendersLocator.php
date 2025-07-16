@@ -43,6 +43,8 @@ final class SendersLocator implements SendersLocatorInterface
         foreach ($this->listTypes($envelope) as $type) {
             if (in_array($type, $classes, true)) {
                 yield 'ibexa.messenger.transport' => $this->sender;
+
+                break;
             }
         }
     }
