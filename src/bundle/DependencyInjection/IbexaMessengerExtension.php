@@ -233,6 +233,8 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
             }
             $storeDefinition = new Reference($lockStorageConfig['service']);
             $container->getDefinition('ibexa.messenger.lock_factory')->setArgument(0, $storeDefinition);
+
+            return;
         }
 
         throw new LogicException(sprintf(
