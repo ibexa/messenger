@@ -25,12 +25,6 @@ parameters:
 			path: src/bundle/Serializer/Normalizer/LockKeyNormalizer.php
 
 		-
-			message: '#^Parameter \#1 \$input of function array_flip expects array\<int\|string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/bundle/Serializer/Normalizer/LockKeyNormalizer.php
-
-		-
 			message: '#^Variable property access on Symfony\\Component\\Lock\\Key\.$#'
 			identifier: property.dynamicName
 			count: 1
