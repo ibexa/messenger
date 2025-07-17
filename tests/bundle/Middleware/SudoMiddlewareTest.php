@@ -60,8 +60,9 @@ final class SudoMiddlewareTest extends TestCase
 
         $processedEnvelope = $this->middleware->handle($envelope, $this->stack);
 
+        self::assertNotSame($envelope, $processedEnvelope);
         self::assertSame($envelope->getMessage(), $processedEnvelope->getMessage());
-        self::assertNotNull($processedEnvelope->last(SudoStamp::class));
+        self::assertNull($processedEnvelope->last(SudoStamp::class));
     }
 
     public function testHandleDoesNotAddSudoStampWhenOneExists(): void
