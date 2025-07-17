@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\Serializer\Normalizer;
 
+use Closure;
 use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use ReflectionClass;
 use Symfony\Component\Lock\Key;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -19,6 +21,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
+ * Backport of Symfony normalizer for DeduplicateStamp.
+ *
  * @phpstan-type TData array{
  *     key: mixed,
  *     ttl?: float|null,
@@ -41,11 +45,11 @@ final class DeduplicateStampNormalizer implements NormalizerInterface, Denormali
      */
     public function denormalize($data, string $type, ?string $format = null, array $context = []): DeduplicateStamp
     {
-        $stamp = (new \ReflectionClass(DeduplicateStamp::class))->newInstanceWithoutConstructor();
+        $stamp = (new ReflectionClass(DeduplicateStamp::class))->newInstanceWithoutConstructor();
 
         $key = $this->denormalizer->denormalize($data['key'], Key::class, $format, $context);
 
-        \Closure::bind(function () use ($data, $key): void {
+        Closure::bind(function () use ($data, $key): void {
             $this->key = $key;
             $this->ttl = $data['ttl'] ?? 300.0;
             $this->onlyDeduplicateInQueue = $data['only_deduplicate_in_queue'] ?? false;

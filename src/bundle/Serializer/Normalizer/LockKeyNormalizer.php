@@ -8,11 +8,16 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\Serializer\Normalizer;
 
+use Closure;
+use ReflectionClass;
 use Symfony\Component\Lock\Key;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * Backport of Symfony normalizer for Lock keys.
+ */
 final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterface, CacheableSupportsMethodInterface
 {
     public function hasCacheableSupportsMethod(): bool
@@ -27,7 +32,7 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
     {
         assert($data instanceof Key);
 
-        return \Closure::bind(fn () => array_intersect_key(
+        return Closure::bind(fn () => array_intersect_key(
             get_object_vars($this),
             /** @phpstan-ignore-next-line argument.type */
             array_flip($this->__sleep())
@@ -44,8 +49,8 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
      */
     public function denormalize($data, string $type, ?string $format = null, array $context = []): Key
     {
-        $key = (new \ReflectionClass(Key::class))->newInstanceWithoutConstructor();
-        $setter = \Closure::bind(
+        $key = (new ReflectionClass(Key::class))->newInstanceWithoutConstructor();
+        $setter = Closure::bind(
             fn (string $field) => $this->$field = $data[$field],
             $key,
             Key::class,
