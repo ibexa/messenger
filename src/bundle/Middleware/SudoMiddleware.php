@@ -30,9 +30,13 @@ final class SudoMiddleware implements MiddlewareInterface
         if ($stamp === null) {
             $envelope = $envelope->with(new SudoStamp());
 
-            return $this->repository->sudo(
+            $envelope = $this->repository->sudo(
                 static fn (): Envelope => $stack->next()->handle($envelope, $stack)
             );
+
+            assert($envelope instanceof Envelope);
+
+            return $envelope->withoutStampsOfType(SudoStamp::class);
         }
 
         return $stack->next()->handle($envelope, $stack);
