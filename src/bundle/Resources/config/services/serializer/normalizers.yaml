@@ -8,6 +8,10 @@ services:
         tags:
             - { name: ibexa.messenger.serializer.normalizer, priority: -60 }
 
+    Ibexa\Bundle\Messenger\Serializer\Normalizer\LockKeyNormalizer:
+        tags:
+            - { name: ibexa.messenger.serializer.normalizer, priority: -60 }
+
     ibexa.messenger.serializer.normalizer.array_denormalizer:
         class: Symfony\Component\Serializer\Normalizer\ArrayDenormalizer
         tags:

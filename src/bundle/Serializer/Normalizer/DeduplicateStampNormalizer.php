@@ -9,19 +9,28 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\Messenger\Serializer\Normalizer;
 
 use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use Symfony\Component\Lock\Key;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @phpstan-type TData array{
- *     key: string,
+ *     key: mixed,
  *     ttl?: float|null,
  *     only_deduplicate_in_queue?: bool|null,
  * }
  */
-final class DeduplicateStampNormalizer implements NormalizerInterface, DenormalizerInterface, CacheableSupportsMethodInterface
+final class DeduplicateStampNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface, CacheableSupportsMethodInterface
 {
+    use NormalizerAwareTrait;
+
+    use DenormalizerAwareTrait;
+
     public function hasCacheableSupportsMethod(): bool
     {
         return true;
@@ -32,11 +41,17 @@ final class DeduplicateStampNormalizer implements NormalizerInterface, Denormali
      */
     public function denormalize($data, string $type, ?string $format = null, array $context = []): DeduplicateStamp
     {
-        return new DeduplicateStamp(
-            $data['key'],
-            $data['ttl'] ?? 300.0,
-            $data['only_deduplicate_in_queue'] ?? false,
-        );
+        $stamp = (new \ReflectionClass(DeduplicateStamp::class))->newInstanceWithoutConstructor();
+
+        $key = $this->denormalizer->denormalize($data['key'], Key::class, $format, $context);
+
+        \Closure::bind(function () use ($data, $key): void {
+            $this->key = $key;
+            $this->ttl = $data['ttl'] ?? 300.0;
+            $this->onlyDeduplicateInQueue = $data['only_deduplicate_in_queue'] ?? false;
+        }, $stamp, DeduplicateStamp::class)();
+
+        return $stamp;
     }
 
     public function supportsDenormalization($data, string $type, ?string $format = null): bool
@@ -52,7 +67,7 @@ final class DeduplicateStampNormalizer implements NormalizerInterface, Denormali
         assert($object instanceof DeduplicateStamp);
 
         return [
-            'key' => (string)($object->getKey()),
+            'key' => $this->normalizer->normalize($object->getKey(), $format, $context),
             'ttl' => $object->getTtl(),
             'only_deduplicate_in_queue' => $object->onlyDeduplicateInQueue(),
         ];
