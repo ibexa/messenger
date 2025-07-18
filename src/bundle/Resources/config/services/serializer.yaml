@@ -5,7 +5,7 @@ services:
         public: false
 
     ibexa.messenger.serializer:
-        class: Ibexa\Bundle\Messenger\Serializer\Serializer
+        class: Symfony\Component\Messenger\Transport\Serialization\Serializer
         factory: [ '@Ibexa\Bundle\Messenger\Serializer\SerializerFactory', 'create' ]
 
     Ibexa\Bundle\Messenger\Serializer\SerializerFactory:

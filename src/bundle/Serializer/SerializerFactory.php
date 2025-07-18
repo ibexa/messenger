@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\Messenger\Serializer;
 
 use function Ibexa\PolyfillPhp82\iterator_to_array;
+use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
