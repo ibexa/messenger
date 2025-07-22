@@ -13,7 +13,9 @@ use Symfony\Component\Messenger\Exception\LogicException;
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
 /**
- * Backport of Symfony DeduplicateStamp.
+ * (c) Fabien Potencier <fabien@symfony.com>.
+ *
+ * Original code: https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/Messenger/Stamp/DeduplicateStamp.php
  */
 final class DeduplicateStamp implements StampInterface
 {

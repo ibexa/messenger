@@ -15,6 +15,11 @@ use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 
+/**
+ * (c) Fabien Potencier <fabien@symfony.com>.
+ *
+ * Original code: https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/Messenger/Middleware/DeduplicateMiddleware.php
+ */
 final class DeduplicateMiddleware implements MiddlewareInterface
 {
     private LockFactory $lockFactory;
