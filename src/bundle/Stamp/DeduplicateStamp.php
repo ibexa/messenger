@@ -31,7 +31,10 @@ final class DeduplicateStamp implements StampInterface
         bool $onlyDeduplicateInQueue = false
     ) {
         if (!class_exists(Key::class)) {
-            throw new LogicException(\sprintf('You cannot use the "%s" as the Lock component is not installed. Try running "composer require symfony/lock".', self::class));
+            throw new LogicException(sprintf(
+                'You cannot use the "%s" as the Lock component is not installed. Try running "composer require symfony/lock".',
+                self::class,
+            ));
         }
 
         $this->key = new Key($key);
