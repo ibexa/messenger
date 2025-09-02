@@ -57,7 +57,7 @@ final class IbexaMessengerExtensionTest extends AbstractExtensionTestCase
             'transport_dsn' => 'redis://redis.messenger_default:6379/ibexa_messages?delete_after_ack=0&amp;read_timeout=5',
         ]);
 
-        $definition = $this->container->getDefinition('messenger.transport.ibexa.messenger.transport');
+        $definition = $this->container->getDefinition('ibexa.messenger.transport');
         self::assertSame('%ibexa.messenger.transport_dsn%', $definition->getArgument(0));
 
         self::assertSame(

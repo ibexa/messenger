@@ -1,12 +1,16 @@
 <?php
 
+/**
+ * @copyright Copyright (C) Ibexa AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ */
 declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\DependencyInjection\CompilerPass;
 
 use Ibexa\Bundle\Messenger\Transport\ConnectionRegistry;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 final class TransportFactoryCompilerPass implements CompilerPassInterface
