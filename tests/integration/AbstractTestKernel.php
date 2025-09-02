@@ -59,6 +59,6 @@ abstract class AbstractTestKernel extends IbexaTestKernel
         yield from parent::getExposedServicesById();
 
         yield 'ibexa.messenger.bus' => MessageBusInterface::class;
-        yield 'messenger.transport.ibexa.messenger.transport' => TransportInterface::class;
+        yield 'ibexa.messenger.transport' => TransportInterface::class;
     }
 }

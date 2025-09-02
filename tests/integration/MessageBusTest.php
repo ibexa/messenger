@@ -32,7 +32,7 @@ final class MessageBusTest extends IbexaKernelTestCase
     {
         $core = self::getIbexaTestCore();
         $this->bus = $core->getServiceByClassName(MessageBusInterface::class, 'ibexa.messenger.bus');
-        $this->receiver = $core->getServiceByClassName(ReceiverInterface::class, 'messenger.transport.ibexa.messenger.transport');
+        $this->receiver = $core->getServiceByClassName(ReceiverInterface::class, 'ibexa.messenger.transport');
         $this->fooHandler = $core->getServiceByClassName(FooMessageHandler::class);
     }
 
