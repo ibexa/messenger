@@ -21,10 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Lock\PersistingStoreInterface;
 use Symfony\Component\Lock\Store\StoreFactory;
-use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsTransportFactory;
-use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransportFactory;
-use Symfony\Component\Messenger\Bridge\Beanstalkd\Transport\BeanstalkdTransportFactory;
-use Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransportFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -59,7 +55,6 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         $loader->load('services.yaml');
 
         $this->configureLockStorage($mergedConfig['deduplication_lock_storage'], $container);
-        $this->checkMessengerBridgePackages($container);
         $this->registerMessengerConfiguration($mergedConfig, $container);
 
         if ($this->shouldLoadTestServices($container)) {
@@ -141,54 +136,6 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         }
 
         $container->setParameter($busId . '.middleware', $middleware);
-    }
-
-    /**
-     * Mimic Symfony FrameworkExtension behavior.
-     *
-     * @see https://github.com/symfony/symfony/blob/36d8d5d464b3fc1d7988145ee01b64dc749bd936/src/Symfony/Bundle/FrameworkBundle/DependencyInjection/FrameworkExtension.php#L2326-L2340
-     */
-    private function checkMessengerBridgePackages(ContainerBuilder $container): void
-    {
-        if (ContainerBuilder::willBeAvailable(
-            'symfony/amqp-messenger',
-            AmqpTransportFactory::class,
-            ['symfony/framework-bundle', 'symfony/messenger'],
-            true
-        )) {
-            $container->getDefinition('ibexa.messenger.transport.amqp.factory')
-                ->addTag('ibexa.messenger.transport_factory');
-        }
-
-        if (ContainerBuilder::willBeAvailable(
-            'symfony/redis-messenger',
-            RedisTransportFactory::class,
-            ['symfony/framework-bundle', 'symfony/messenger'],
-            true
-        )) {
-            $container->getDefinition('ibexa.messenger.transport.redis.factory')
-                ->addTag('ibexa.messenger.transport_factory');
-        }
-
-        if (ContainerBuilder::willBeAvailable(
-            'symfony/amazon-sqs-messenger',
-            AmazonSqsTransportFactory::class,
-            ['symfony/framework-bundle', 'symfony/messenger'],
-            true
-        )) {
-            $container->getDefinition('ibexa.messenger.transport.sqs.factory')
-                ->addTag('ibexa.messenger.transport_factory');
-        }
-
-        if (ContainerBuilder::willBeAvailable(
-            'symfony/beanstalkd-messenger',
-            BeanstalkdTransportFactory::class,
-            ['symfony/framework-bundle', 'symfony/messenger'],
-            true
-        )) {
-            $container->getDefinition('ibexa.messenger.transport.beanstalkd.factory')
-                ->addTag('ibexa.messenger.transport_factory');
-        }
     }
 
     /**

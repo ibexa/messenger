@@ -18,3 +18,4 @@ services:
 
     ibexa.messenger.lock_store.dbal.doctrine_connection:
         parent: 'ibexa.persistence.connection'
+        lazy: true

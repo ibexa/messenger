@@ -22,7 +22,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('transport_dsn')
                     ->info('The DSN of the transport, as expected by Symfony Messenger transport factory.')
-                    ->defaultValue('doctrine://default?table_name=ibexa_messenger_messages&auto_setup=false')
+                    ->defaultValue('doctrine://ibexa.current?table_name=ibexa_messenger_messages&auto_setup=false')
                 ->end()
                 ->arrayNode('deduplication_lock_storage')
                     ->canBeDisabled()
