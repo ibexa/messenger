@@ -17,5 +17,6 @@ final class RedisTestKernel extends AbstractTestKernel
         parent::registerContainerConfiguration($loader);
 
         $loader->load(__DIR__ . '/Resources/redis/ibexa_messenger.yaml');
+        $loader->load(__DIR__ . '/Resources/redis/framework.yaml');
     }
 }
