@@ -88,9 +88,9 @@ final class LockKeyNormalizerTest extends TestCase
         yield [
             $key,
             [
-                'resource' => 'bar',
-                'expiringTime' => $currentTime + 300,
+                'expiringTime' => (float)($currentTime + 300),
                 'state' => [],
+                'resource' => 'bar',
             ],
         ];
 
@@ -100,11 +100,11 @@ final class LockKeyNormalizerTest extends TestCase
         yield [
             $key,
             [
-                'resource' => 'foo',
                 'expiringTime' => null,
                 'state' => [
                     'foo' => 'bar',
                 ],
+                'resource' => 'foo',
             ],
         ];
     }

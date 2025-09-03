@@ -42,9 +42,7 @@ jobs:
             fail-fast: false
             matrix:
                 php:
-                    - '7.4'
-                    - '8.0'
-                    - '8.4'
+                    - '8.3'
 
         steps:
             - uses: actions/checkout@v4
@@ -94,9 +92,7 @@ jobs:
         strategy:
             matrix:
                 php:
-                    - '7.4'
-                    - '8.0'
-                    - '8.4'
+                    - '8.3'
 
         steps:
             -   uses: actions/checkout@v4
@@ -156,9 +152,7 @@ jobs:
         strategy:
             matrix:
                 php:
-                    - '7.4'
-                    - '8.0'
-                    - '8.4'
+                    - '8.3'
 
         steps:
             -   uses: actions/checkout@v4
@@ -214,9 +208,7 @@ jobs:
             fail-fast: false
             matrix:
                 php:
-                    - '7.4'
-                    - '8.0'
-                    - '8.4'
+                    - '8.3'
 
         steps:
             -   uses: actions/checkout@v4
