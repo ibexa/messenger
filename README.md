@@ -1,4 +1,4 @@
-# messenger
+# Ibexa DXP Messenger
 
 This package is part of [Ibexa DXP](https://ibexa.co).
 
