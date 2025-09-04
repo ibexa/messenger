@@ -169,6 +169,9 @@ jobs:
                 with:
                     dependency-versions: "highest"
 
+            -   run: composer require symfony/redis-messenger ^7.3
+                name: Install Redis messenger
+
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
