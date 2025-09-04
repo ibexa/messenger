@@ -31,7 +31,7 @@ final class DoctrineDbalStore extends SymfonyDoctrineDbalStore
 
     public function save(Key $key): void
     {
-        if ($this->connection->isTransactionActive() && $this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+        if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
             $this->handlePostgresLock($key);
 
             return;
