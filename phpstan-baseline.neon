@@ -43,6 +43,12 @@ parameters:
 			path: src/bundle/Lock/Store/DoctrineDbalStore.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/bundle/Lock/Store/DoctrineDbalStore.php
+
+		-
 			message: '#^Parameter \#1 \$data \(array\{key\: mixed, ttl\?\: float\|null, only_deduplicate_in_queue\?\: bool\|null\}\) of method Ibexa\\Bundle\\Messenger\\Serializer\\Normalizer\\DeduplicateStampNormalizer\:\:denormalize\(\) should be contravariant with parameter \$data \(mixed\) of method Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface\:\:denormalize\(\)$#'
 			identifier: method.childParameterType
 			count: 1
@@ -51,12 +57,6 @@ parameters:
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/bundle/Serializer/Normalizer/LockKeyNormalizer.php
-
-		-
-			message: '#^Parameter \#1 \$field of closure expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/bundle/Serializer/Normalizer/LockKeyNormalizer.php
 
