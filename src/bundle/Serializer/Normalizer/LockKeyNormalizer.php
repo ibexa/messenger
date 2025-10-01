@@ -27,17 +27,13 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<mixed>
      */
     public function normalize($data, ?string $format = null, array $context = []): array
     {
         assert($data instanceof Key);
 
-        return Closure::bind(fn () => array_intersect_key(
-            get_object_vars($this),
-            /** @phpstan-ignore-next-line argument.type */
-            array_flip($this->__sleep())
-        ), $data, Key::class)();
+        return $data->__serialize();
     }
 
     public function supportsNormalization($data, ?string $format = null, array $context = []): bool
@@ -56,7 +52,7 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
             $key,
             Key::class,
         );
-        foreach ($key->__sleep() as $serializedField) {
+        foreach (['resource', 'expiringTime', 'state'] as $serializedField) {
             $setter($serializedField);
         }
 
