@@ -10,6 +10,7 @@ namespace Ibexa\Bundle\Messenger\DependencyInjection;
 
 use Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware;
 use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
+use Ibexa\Bundle\Messenger\Serializer\Normalizer\LockKeyNormalizer;
 use Ibexa\Contracts\Messenger\Transport\MessageProviderInterface;
 use LogicException;
 use Symfony\Component\Config\FileLocator;
@@ -20,6 +21,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Lock\PersistingStoreInterface;
+use Symfony\Component\Lock\Serializer\LockNormalizer as SymfonyLockNormalizer;
 use Symfony\Component\Lock\Store\StoreFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -55,6 +57,7 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         $loader->load('services.yaml');
 
         $this->configureLockStorage($mergedConfig['deduplication_lock_storage'], $container);
+        $this->configureLockNormalizerBackport($container);
         $this->registerMessengerConfiguration($mergedConfig, $container);
 
         if ($this->shouldLoadTestServices($container)) {
@@ -189,5 +192,16 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
             implode('", "', ['doctrine', 'custom', 'service']),
             $lockStorageType,
         ));
+    }
+
+    private function configureLockNormalizerBackport(ContainerBuilder $container): void
+    {
+        // Symfony 7.4 contains proper implementation
+        if (class_exists(SymfonyLockNormalizer::class)) {
+            $container->removeDefinition(LockKeyNormalizer::class);
+            $definition = new Definition(SymfonyLockNormalizer::class);
+            $definition->addTag('ibexa.messenger.serializer.normalizer', ['priority' => -60]);
+            $container->setDefinition('ibexa.messenger.lock_normalizer', $definition);
+        }
     }
 }
