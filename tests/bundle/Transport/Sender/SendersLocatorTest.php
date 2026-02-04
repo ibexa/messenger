@@ -108,6 +108,29 @@ final class SendersLocatorTest extends TestCase
         $this->assertMessageIsHandled($envelope);
     }
 
+    public function testGetSendersWithMultipleGenerators(): void
+    {
+        $envelope = new Envelope(new \stdClass());
+        $generator = function (): \Generator {
+            yield from ['stdClass'];
+            yield from ['AnotherClass'];
+        };
+
+        $this->messageProviderMock
+            ->expects(self::once())
+            ->method('getHandledClasses')
+            ->willReturn($generator());
+
+        $locator = new SendersLocator($this->senderMock, $this->messageProviderMock, null);
+        $senders = $locator->getSenders($envelope);
+
+        $expectedSenders = [
+            'ibexa.messenger.transport' => $this->senderMock,
+        ];
+        self::assertInstanceOf(Traversable::class, $senders);
+        self::assertSame($expectedSenders, iterator_to_array($senders));
+    }
+
     private function assertMessageIsHandled(Envelope $envelope): void
     {
         $this->messageProviderMock
