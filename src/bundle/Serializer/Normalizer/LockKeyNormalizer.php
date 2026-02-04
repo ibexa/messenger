@@ -51,7 +51,9 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
     {
         $key = (new ReflectionClass(Key::class))->newInstanceWithoutConstructor();
         $setter = Closure::bind(
-            fn (string $field) => $this->$field = $data[$field],
+            function (string $field) use ($data): void {
+                $this->$field = $data[$field];
+            },
             $key,
             Key::class,
         );

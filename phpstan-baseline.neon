@@ -61,11 +61,6 @@ parameters:
 			path: src/bundle/Serializer/Normalizer/DeduplicateStampNormalizer.php
 
 		-
-			message: '#^Arrow function is missing a return type declaration$#'
-			count: 1
-			path: src/bundle/Serializer/Normalizer/LockKeyNormalizer.php
-
-		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -88,11 +83,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/bundle/Transport/Sender/SendersLocator.php
-
-		-
-			message: '#^Arrow function is missing a return type declaration$#'
-			count: 1
-			path: tests/bundle/Middleware/SudoMiddlewareTest.php
 
 		-
 			message: '#^Cannot call method import\(\) on mixed\.$#'
