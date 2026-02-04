@@ -111,7 +111,7 @@ final class SendersLocatorTest extends TestCase
     public function testGetSendersWithMultipleGenerators(): void
     {
         $envelope = new Envelope(new \stdClass());
-        $generator = function (): \Generator {
+        $generator = static function (): \Generator {
             yield from ['stdClass'];
             yield from ['AnotherClass'];
         };
