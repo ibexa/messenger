@@ -56,7 +56,12 @@ final class SudoMiddlewareTest extends TestCase
         $this->repository
             ->expects(self::once())
             ->method('sudo')
-            ->willReturnCallback(static fn (callable $callback) => $callback());
+            ->willReturnCallback(static function (callable $callback): Envelope {
+                $envelope = $callback();
+                self::assertInstanceOf(Envelope::class, $envelope);
+
+                return $envelope;
+            });
 
         $processedEnvelope = $this->middleware->handle($envelope, $this->stack);
 

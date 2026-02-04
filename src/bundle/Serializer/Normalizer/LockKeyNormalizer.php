@@ -32,7 +32,7 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
     {
         assert($data instanceof Key);
 
-        return Closure::bind(fn () => array_intersect_key(
+        return Closure::bind(fn (): array => array_intersect_key(
             get_object_vars($this),
             /** @phpstan-ignore-next-line argument.type */
             array_flip($this->__sleep())
@@ -51,7 +51,9 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
     {
         $key = (new ReflectionClass(Key::class))->newInstanceWithoutConstructor();
         $setter = Closure::bind(
-            fn (string $field) => $this->$field = $data[$field],
+            function (string $field) use ($data): void {
+                $this->$field = $data[$field];
+            },
             $key,
             Key::class,
         );
