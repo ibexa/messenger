@@ -38,7 +38,7 @@ final class SendersLocator implements SendersLocatorInterface
             yield from $this->inner->getSenders($envelope);
         }
 
-        $classes = iterator_to_array($this->messageProvider->getHandledClasses());
+        $classes = iterator_to_array($this->messageProvider->getHandledClasses(), false);
 
         foreach ($this->listTypes($envelope) as $type) {
             if (in_array($type, $classes, true)) {
