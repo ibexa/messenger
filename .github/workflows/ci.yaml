@@ -16,7 +16,7 @@ jobs:
                 php:
                     - '8.3'
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Setup PHP Action
               uses: shivammathur/setup-php@v2
@@ -43,11 +43,11 @@ jobs:
             matrix:
                 php:
                     - '7.4'
-                    - '8.0'
+                    - '8.3'
                     - '8.4'
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Setup PHP Action
               uses: shivammathur/setup-php@v2
@@ -76,7 +76,7 @@ jobs:
         needs: tests
         services:
             postgres:
-                image: postgres:10
+                image: postgres:18
                 ports:
                     - 5432
                 env:
@@ -95,11 +95,11 @@ jobs:
             matrix:
                 php:
                     - '7.4'
-                    - '8.0'
+                    - '8.3'
                     - '8.4'
 
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
 
             -   name: Setup PHP Action
                 uses: shivammathur/setup-php@v2
@@ -157,11 +157,11 @@ jobs:
             matrix:
                 php:
                     - '7.4'
-                    - '8.0'
+                    - '8.3'
                     - '8.4'
 
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
 
             -   name: Setup PHP Action
                 uses: shivammathur/setup-php@v2
@@ -215,11 +215,11 @@ jobs:
             matrix:
                 php:
                     - '7.4'
-                    - '8.0'
+                    - '8.3'
                     - '8.4'
 
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
 
             -   name: Setup PHP Action
                 uses: shivammathur/setup-php@v2
