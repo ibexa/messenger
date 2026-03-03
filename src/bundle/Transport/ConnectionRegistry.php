@@ -32,7 +32,12 @@ final class ConnectionRegistry implements BaseConnectionRegistry
         return $this->registry->getDefaultConnectionName();
     }
 
-    public function getConnection(?string $name = null): object
+    /**
+     * Cannot declare types to maintain compatibility with doctrine/persistence v2.
+     *
+     * @param string|null $name
+     */
+    public function getConnection($name = null): object
     {
         if ($name === self::DEFAULT_IBEXA_CONNECTION) {
             $name = $this->repositoryConfigurationProvider->getStorageConnectionName();
