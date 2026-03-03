@@ -16,22 +16,17 @@ jobs:
                 php:
                     - '8.3'
         steps:
-            - uses: actions/checkout@v6
+            -   uses: actions/checkout@v6
 
-            - name: Setup PHP Action
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php }}
-                  coverage: none
-                  extensions: 'pdo_sqlite, gd'
-                  tools: cs2pr
+            -   uses: ibexa/gh-workflows/actions/composer-install@main
+                with:
+                    gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                    satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
 
-            - uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: "highest"
-
-            - name: Run code style check
-              run: composer run-script check-cs -- --format=checkstyle | cs2pr
+            -   name: Run code style check
+                run: composer run-script check-cs -- --format=checkstyle | cs2pr
 
     tests:
         name: Tests
@@ -50,29 +45,24 @@ jobs:
                     - 'doctrine/persistence:^3.0'
 
         steps:
-            - uses: actions/checkout@v6
+            -   uses: actions/checkout@v6
 
-            - name: Setup PHP Action
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php }}
-                  coverage: none
-                  extensions: pdo_sqlite, gd
-                  tools: cs2pr
+            -   uses: ibexa/gh-workflows/actions/composer-install@main
+                with:
+                    gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                    satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
+                    composer-options: "--with ${{ matrix.doctrine-persistence }}"
 
-            - uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: "highest"
-                  composer-options: "--with ${{ matrix.doctrine-persistence }}"
+            -   name: Setup problem matchers for PHPUnit
+                run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-            - name: Setup problem matchers for PHPUnit
-              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+            -   name: Run PHPStan analysis
+                run: composer run-script phpstan
 
-            - name: Run PHPStan analysis
-              run: composer run-script phpstan
-
-            - name: Run test suite
-              run: composer run-script --timeout=600 test
+            -   name: Run test suite
+                run: composer run-script --timeout=600 test
 
     integration-tests-postgres:
         name: PostgreSQL integration tests
@@ -107,18 +97,14 @@ jobs:
         steps:
             -   uses: actions/checkout@v6
 
-            -   name: Setup PHP Action
-                uses: shivammathur/setup-php@v2
+            -   uses: ibexa/gh-workflows/actions/composer-install@main
                 with:
-                    php-version: ${{ matrix.php }}
-                    coverage: none
-                    extensions: pdo_pgsql, gd
-                    tools: cs2pr
-
-            -   uses: ramsey/composer-install@v3
-                with:
-                    dependency-versions: "highest"
+                    gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                    satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
                     composer-options: "--with ${{ matrix.doctrine-persistence }}"
+                    php-extensions: 'pdo_pgsql, gd'
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -173,18 +159,14 @@ jobs:
         steps:
             -   uses: actions/checkout@v6
 
-            -   name: Setup PHP Action
-                uses: shivammathur/setup-php@v2
+            -   uses: ibexa/gh-workflows/actions/composer-install@main
                 with:
-                    php-version: ${{ matrix.php }}
-                    coverage: none
-                    extensions: pdo_pgsql, gd
-                    tools: cs2pr
-
-            -   uses: ramsey/composer-install@v3
-                with:
-                    dependency-versions: "highest"
+                    gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                    satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
                     composer-options: "--with ${{ matrix.doctrine-persistence }}"
+                    php-extensions: 'pdo_mysql, gd'
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -235,18 +217,14 @@ jobs:
         steps:
             -   uses: actions/checkout@v6
 
-            -   name: Setup PHP Action
-                uses: shivammathur/setup-php@v2
+            -   uses: ibexa/gh-workflows/actions/composer-install@main
                 with:
-                    php-version: ${{ matrix.php }}
-                    coverage: none
-                    extensions: pdo_mysql, gd
-                    tools: cs2pr
-
-            -   uses: ramsey/composer-install@v3
-                with:
-                    dependency-versions: "highest"
+                    gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                    satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
                     composer-options: "--with ${{ matrix.doctrine-persistence }}"
+                    php-extensions: 'pdo_mysql, gd'
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
