@@ -45,6 +45,9 @@ jobs:
                     - '7.4'
                     - '8.3'
                     - '8.4'
+                doctrine-persistence:
+                    - 'doctrine/persistence:^2.0'
+                    - 'doctrine/persistence:^3.0'
 
         steps:
             - uses: actions/checkout@v6
@@ -60,7 +63,7 @@ jobs:
             - uses: ramsey/composer-install@v3
               with:
                   dependency-versions: "highest"
-                  composer-options: "${{ matrix.composer_options }}"
+                  composer-options: "--with ${{ matrix.doctrine-persistence }}"
 
             - name: Setup problem matchers for PHPUnit
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -97,6 +100,9 @@ jobs:
                     - '7.4'
                     - '8.3'
                     - '8.4'
+                doctrine-persistence:
+                    - 'doctrine/persistence:^2.0'
+                    - 'doctrine/persistence:^3.0'
 
         steps:
             -   uses: actions/checkout@v6
@@ -112,6 +118,7 @@ jobs:
             -   uses: ramsey/composer-install@v3
                 with:
                     dependency-versions: "highest"
+                    composer-options: "--with ${{ matrix.doctrine-persistence }}"
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -159,6 +166,9 @@ jobs:
                     - '7.4'
                     - '8.3'
                     - '8.4'
+                doctrine-persistence:
+                    - 'doctrine/persistence:^2.0'
+                    - 'doctrine/persistence:^3.0'
 
         steps:
             -   uses: actions/checkout@v6
@@ -174,6 +184,7 @@ jobs:
             -   uses: ramsey/composer-install@v3
                 with:
                     dependency-versions: "highest"
+                    composer-options: "--with ${{ matrix.doctrine-persistence }}"
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -217,6 +228,9 @@ jobs:
                     - '7.4'
                     - '8.3'
                     - '8.4'
+                doctrine-persistence:
+                    - 'doctrine/persistence:^2.0'
+                    - 'doctrine/persistence:^3.0'
 
         steps:
             -   uses: actions/checkout@v6
@@ -232,6 +246,7 @@ jobs:
             -   uses: ramsey/composer-install@v3
                 with:
                     dependency-versions: "highest"
+                    composer-options: "--with ${{ matrix.doctrine-persistence }}"
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
