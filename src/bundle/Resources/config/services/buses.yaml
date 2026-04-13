@@ -25,7 +25,8 @@ services:
 
     Ibexa\Bundle\Messenger\Middleware\SudoMiddleware: ~
 
-    Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware:
+    ibexa.messenger.middleware.deduplicate_middleware:
+        class: Symfony\Component\Messenger\Middleware\DeduplicateMiddleware
         arguments:
             - '@ibexa.messenger.lock_factory'
 
