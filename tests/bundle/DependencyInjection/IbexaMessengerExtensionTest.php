@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\DependencyInjection;
 
 use Ibexa\Bundle\Messenger\DependencyInjection\IbexaMessengerExtension;
-use Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 final class IbexaMessengerExtensionTest extends AbstractExtensionTestCase
@@ -33,7 +32,7 @@ final class IbexaMessengerExtensionTest extends AbstractExtensionTestCase
     {
         $this->load();
 
-        self::assertTrue($this->container->hasDefinition(DeduplicateMiddleware::class));
+        self::assertTrue($this->container->hasDefinition('ibexa.messenger.middleware.deduplicate_middleware'));
         self::assertTrue($this->container->hasDefinition('ibexa.messenger.lock_factory'));
         self::assertTrue($this->container->hasDefinition('ibexa.messenger.lock_store.dbal'));
     }
@@ -46,7 +45,7 @@ final class IbexaMessengerExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
-        self::assertFalse($this->container->hasDefinition(DeduplicateMiddleware::class));
+        self::assertFalse($this->container->hasDefinition('ibexa.messenger.middleware.deduplicate_middleware'));
         self::assertFalse($this->container->hasDefinition('ibexa.messenger.lock_factory'));
         self::assertFalse($this->container->hasDefinition('ibexa.messenger.lock_store.dbal'));
     }
