@@ -55,8 +55,20 @@ parameters:
 			path: src/bundle/Serializer/Normalizer/DeduplicateStampNormalizer.php
 
 		-
+			message: '#^Return type \(Ibexa\\Bundle\\Messenger\\Stamp\\DeduplicateStamp\) of method Ibexa\\Bundle\\Messenger\\Serializer\\Normalizer\\DeduplicateStampNormalizer\:\:denormalize\(\) should be covariant with return type \(\(\$type is class\-string\<object\> \? object \: mixed\)\) of method Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface\:\:denormalize\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/bundle/Serializer/Normalizer/DeduplicateStampNormalizer.php
+
+		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/bundle/Serializer/Normalizer/LockKeyNormalizer.php
+
+		-
+			message: '#^Return type \(Symfony\\Component\\Lock\\Key\) of method Ibexa\\Bundle\\Messenger\\Serializer\\Normalizer\\LockKeyNormalizer\:\:denormalize\(\) should be covariant with return type \(\(\$type is class\-string\<object\> \? object \: mixed\)\) of method Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface\:\:denormalize\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: src/bundle/Serializer/Normalizer/LockKeyNormalizer.php
 
