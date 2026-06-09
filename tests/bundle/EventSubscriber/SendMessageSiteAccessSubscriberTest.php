@@ -41,7 +41,7 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
     {
         $siteAccess = new SiteAccess('my_site');
         $envelope = new Envelope(new \stdClass());
-        $event = new SendMessageToTransportsEvent($envelope, []);
+        $event = new SendMessageToTransportsEvent($envelope);
 
         $this->siteAccessService
             ->expects(self::once())
@@ -60,7 +60,7 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
     public function testOnSendMessageToTransportDoesNothingWhenNoSiteAccess(): void
     {
         $envelope = new Envelope(new \stdClass());
-        $event = new SendMessageToTransportsEvent($envelope, []);
+        $event = new SendMessageToTransportsEvent($envelope);
 
         $this->siteAccessService
             ->expects(self::once())

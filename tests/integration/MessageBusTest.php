@@ -14,17 +14,18 @@ use Ibexa\Contracts\Test\Core\IbexaKernelTestCase;
 use Ibexa\Core\MVC\Symfony\Event\ScopeChangeEvent;
 use Ibexa\Core\MVC\Symfony\MVCEvents;
 use Ibexa\Core\MVC\Symfony\SiteAccess;
+use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessService;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessage;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessageHandler;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class MessageBusTest extends IbexaKernelTestCase
 {
@@ -34,7 +35,7 @@ final class MessageBusTest extends IbexaKernelTestCase
 
     private FooMessageHandler $fooHandler;
 
-    private SiteAccessServiceInterface $siteAccessService;
+    private SiteAccessService $siteAccessService;
 
     private EventDispatcherInterface $eventDispatcher;
 
@@ -44,8 +45,14 @@ final class MessageBusTest extends IbexaKernelTestCase
         $this->bus = $core->getServiceByClassName(MessageBusInterface::class, 'ibexa.messenger.bus');
         $this->receiver = $core->getServiceByClassName(ReceiverInterface::class, 'ibexa.messenger.transport');
         $this->fooHandler = $core->getServiceByClassName(FooMessageHandler::class);
-        $this->siteAccessService = $core->getServiceByClassName(SiteAccessServiceInterface::class);
-        $this->eventDispatcher = self::getContainer()->get('event_dispatcher');
+
+        $siteAccessService = $core->getServiceByClassName(SiteAccessServiceInterface::class);
+        self::assertInstanceOf(SiteAccessService::class, $siteAccessService);
+        $this->siteAccessService = $siteAccessService;
+
+        $eventDispatcher = self::getContainer()->get('event_dispatcher');
+        self::assertInstanceOf(EventDispatcherInterface::class, $eventDispatcher);
+        $this->eventDispatcher = $eventDispatcher;
 
         // Clear any SiteAccess set by the kernel to prevent the subscriber from stamping
         // envelopes with a SiteAccess name that may not exist in the provider.
