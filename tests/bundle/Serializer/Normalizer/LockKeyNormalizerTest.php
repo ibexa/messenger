@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\Serializer\Normalizer;
 
 use Ibexa\Bundle\Messenger\Serializer\Normalizer\LockKeyNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Lock\Key;
 
@@ -22,14 +23,13 @@ final class LockKeyNormalizerTest extends TestCase
     }
 
     /**
-     * @dataProvider provideForTest
-     *
      * @param array{
      *     resource: string,
      *     expiringTime: float|null,
      *     state: array<string, mixed>,
      * } $expected
      */
+    #[DataProvider('provideForTest')]
     public function testNormalize(
         Key $data,
         array $expected
@@ -40,14 +40,13 @@ final class LockKeyNormalizerTest extends TestCase
     }
 
     /**
-     * @dataProvider provideForTest
-     *
      * @param array{
      *     resource: string,
      *     expiringTime: float|null,
      *     state: array<string, mixed>,
      * } $data
      */
+    #[DataProvider('provideForTest')]
     public function testDenormalize(
         Key $expectedKey,
         array $data

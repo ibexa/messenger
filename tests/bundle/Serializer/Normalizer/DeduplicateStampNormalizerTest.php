@@ -10,6 +10,7 @@ namespace Ibexa\Tests\Bundle\Messenger\Serializer\Normalizer;
 
 use Ibexa\Bundle\Messenger\Serializer\Normalizer\DeduplicateStampNormalizer;
 use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Lock\Key;
@@ -37,14 +38,13 @@ final class DeduplicateStampNormalizerTest extends TestCase
     }
 
     /**
-     * @dataProvider provideForTest
-     *
      * @param array{
      *     key: \ArrayObject<string, mixed>,
      *     ttl: float,
      *     only_deduplicate_in_queue: bool,
      * } $expected
      */
+    #[DataProvider('provideForTest')]
     public function testNormalize(
         DeduplicateStamp $stamp,
         array $expected
@@ -62,14 +62,13 @@ final class DeduplicateStampNormalizerTest extends TestCase
     }
 
     /**
-     * @dataProvider provideForTest
-     *
      * @param array{
      *     key: \ArrayObject<string, mixed>,
      *     ttl: float,
      *     only_deduplicate_in_queue: bool,
      * } $data
      */
+    #[DataProvider('provideForTest')]
     public function testDenormalize(
         DeduplicateStamp $expectedStamp,
         array $data
