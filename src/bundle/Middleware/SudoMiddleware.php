@@ -24,8 +24,10 @@ final class SudoMiddleware implements MiddlewareInterface
         $this->repository = $repository;
     }
 
-    public function handle(Envelope $envelope, StackInterface $stack): Envelope
-    {
+    public function handle(
+        Envelope $envelope,
+        StackInterface $stack
+    ): Envelope {
         $stamp = $envelope->last(SudoStamp::class);
         if ($stamp === null) {
             $envelope = $envelope->with(new SudoStamp());

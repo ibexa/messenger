@@ -13,6 +13,8 @@ use Ibexa\Contracts\Messenger\Transport\MessageProviderInterface;
 use Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub\SampleMessage;
 use Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub\SampleMessageInterface;
 use Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub\SampleMessageParent;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
@@ -21,15 +23,13 @@ use Traversable;
 
 final class SendersLocatorTest extends TestCase
 {
-    /** @var \Symfony\Component\Messenger\Transport\Sender\SenderInterface&\PHPUnit\Framework\MockObject\MockObject */
-    private SenderInterface $senderMock;
+    private SenderInterface & Stub $senderStub;
 
-    /** @var \Ibexa\Contracts\Messenger\Transport\MessageProviderInterface&\PHPUnit\Framework\MockObject\MockObject */
-    private MessageProviderInterface $messageProviderMock;
+    private MessageProviderInterface & MockObject $messageProviderMock;
 
     protected function setUp(): void
     {
-        $this->senderMock = $this->createMock(SenderInterface::class);
+        $this->senderStub = self::createStub(SenderInterface::class);
         $this->messageProviderMock = $this->createMock(MessageProviderInterface::class);
     }
 
@@ -37,7 +37,7 @@ final class SendersLocatorTest extends TestCase
     {
         $envelope = new Envelope(new \stdClass());
         $innerSendersLocatorMock = $this->createMock(SendersLocatorInterface::class);
-        $innerSender = $this->createMock(SenderInterface::class);
+        $innerSender = self::createStub(SenderInterface::class);
         $innerSendersLocatorMock
             ->expects(self::once())
             ->method('getSenders')
@@ -49,12 +49,12 @@ final class SendersLocatorTest extends TestCase
             ->method('getHandledClasses')
             ->willReturn(['stdClass']);
 
-        $locator = new SendersLocator($this->senderMock, $this->messageProviderMock, $innerSendersLocatorMock);
+        $locator = new SendersLocator($this->senderStub, $this->messageProviderMock, $innerSendersLocatorMock);
         $senders = $locator->getSenders($envelope);
 
         $expectedSenders = [
             'inner.sender' => $innerSender,
-            'ibexa.messenger.transport' => $this->senderMock,
+            'ibexa.messenger.transport' => $this->senderStub,
         ];
         self::assertInstanceOf(Traversable::class, $senders);
         self::assertSame($expectedSenders, iterator_to_array($senders));
@@ -68,11 +68,11 @@ final class SendersLocatorTest extends TestCase
             ->method('getHandledClasses')
             ->willReturn(['stdClass']);
 
-        $locator = new SendersLocator($this->senderMock, $this->messageProviderMock, null);
+        $locator = new SendersLocator($this->senderStub, $this->messageProviderMock, null);
         $senders = $locator->getSenders($envelope);
 
         $expectedSenders = [
-            'ibexa.messenger.transport' => $this->senderMock,
+            'ibexa.messenger.transport' => $this->senderStub,
         ];
         self::assertInstanceOf(Traversable::class, $senders);
         self::assertSame($expectedSenders, iterator_to_array($senders));
@@ -86,7 +86,7 @@ final class SendersLocatorTest extends TestCase
             ->method('getHandledClasses')
             ->willReturn(['AnotherClass']);
 
-        $locator = new SendersLocator($this->senderMock, $this->messageProviderMock, null);
+        $locator = new SendersLocator($this->senderStub, $this->messageProviderMock, null);
         $senders = $locator->getSenders($envelope);
 
         $expectedSenders = [];
@@ -96,14 +96,14 @@ final class SendersLocatorTest extends TestCase
 
     public function testListTypesIncludesInterfaces(): void
     {
-        $envelope = new Envelope($this->createMock(SampleMessageInterface::class));
+        $envelope = new Envelope(self::createStub(SampleMessageInterface::class));
 
         $this->assertMessageIsHandled($envelope);
     }
 
     public function testListTypesIncludesParents(): void
     {
-        $envelope = new Envelope($this->createMock(SampleMessageParent::class));
+        $envelope = new Envelope(self::createStub(SampleMessageParent::class));
 
         $this->assertMessageIsHandled($envelope);
     }
@@ -121,11 +121,11 @@ final class SendersLocatorTest extends TestCase
             ->method('getHandledClasses')
             ->willReturn($generator());
 
-        $locator = new SendersLocator($this->senderMock, $this->messageProviderMock, null);
+        $locator = new SendersLocator($this->senderStub, $this->messageProviderMock, null);
         $senders = $locator->getSenders($envelope);
 
         $expectedSenders = [
-            'ibexa.messenger.transport' => $this->senderMock,
+            'ibexa.messenger.transport' => $this->senderStub,
         ];
         self::assertInstanceOf(Traversable::class, $senders);
         self::assertSame($expectedSenders, iterator_to_array($senders));
@@ -142,11 +142,11 @@ final class SendersLocatorTest extends TestCase
                 SampleMessageInterface::class,
             ]);
 
-        $locator = new SendersLocator($this->senderMock, $this->messageProviderMock, null);
+        $locator = new SendersLocator($this->senderStub, $this->messageProviderMock, null);
         $senders = $locator->getSenders($envelope);
 
         $expectedSenders = [
-            'ibexa.messenger.transport' => $this->senderMock,
+            'ibexa.messenger.transport' => $this->senderStub,
         ];
         self::assertInstanceOf(Traversable::class, $senders);
         self::assertSame($expectedSenders, iterator_to_array($senders));

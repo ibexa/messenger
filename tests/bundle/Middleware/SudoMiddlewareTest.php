@@ -11,6 +11,7 @@ namespace Ibexa\Tests\Bundle\Messenger\Middleware;
 use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
 use Ibexa\Bundle\Messenger\Stamp\SudoStamp;
 use Ibexa\Contracts\Core\Repository\Repository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
@@ -18,11 +19,9 @@ use Symfony\Component\Messenger\Middleware\StackInterface;
 
 final class SudoMiddlewareTest extends TestCase
 {
-    /** @var \Ibexa\Contracts\Core\Repository\Repository&\PHPUnit\Framework\MockObject\MockObject */
-    private Repository $repository;
+    private Repository & MockObject $repository;
 
-    /** @var \Symfony\Component\Messenger\Middleware\StackInterface&\PHPUnit\Framework\MockObject\MockObject */
-    private StackInterface $stack;
+    private StackInterface & MockObject $stack;
 
     private SudoMiddleware $middleware;
 

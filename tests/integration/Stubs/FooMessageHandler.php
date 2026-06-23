@@ -13,7 +13,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class FooMessageHandler
 {
-    /** @var array<\Ibexa\Tests\Integration\Messenger\Stubs\FooMessage> */
+    /** @var array<FooMessage> */
     private array $handledMessages = [];
 
     public function __invoke(FooMessage $message): void
@@ -22,7 +22,7 @@ final class FooMessageHandler
     }
 
     /**
-     * @return array<\Ibexa\Tests\Integration\Messenger\Stubs\FooMessage>
+     * @return array<FooMessage>
      */
     public function getHandledMessages(): array
     {

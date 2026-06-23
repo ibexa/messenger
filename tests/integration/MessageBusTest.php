@@ -103,7 +103,7 @@ final class MessageBusTest extends IbexaKernelTestCase
     }
 
     /**
-     * @return array<\Symfony\Component\Messenger\Envelope>
+     * @return array<Envelope>
      */
     private function getMessagesFromReceiver(): array
     {
