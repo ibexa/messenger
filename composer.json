@@ -20,6 +20,7 @@
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^8",
+        "deptrac/deptrac": "^4.6",
         "ibexa/behat": "~5.0.x-dev",
         "ibexa/code-style": "~2.3.0",
         "ibexa/doctrine-schema": "~5.0.x-dev",
@@ -31,7 +32,6 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^9",
-        "qossmic/deptrac-shim": "^0.24.0 || ^1.0.2",
         "symfony/amazon-sqs-messenger": "^7.4",
         "symfony/beanstalkd-messenger": "^7.4",
         "symfony/phpunit-bridge": "^7.4",
