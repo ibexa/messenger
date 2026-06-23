@@ -23,9 +23,9 @@ use Traversable;
 
 final class SendersLocatorTest extends TestCase
 {
-    private SenderInterface&Stub $senderStub;
+    private SenderInterface & Stub $senderStub;
 
-    private MessageProviderInterface&MockObject $messageProviderMock;
+    private MessageProviderInterface & MockObject $messageProviderMock;
 
     protected function setUp(): void
     {

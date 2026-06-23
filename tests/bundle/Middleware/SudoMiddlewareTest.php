@@ -19,9 +19,9 @@ use Symfony\Component\Messenger\Middleware\StackInterface;
 
 final class SudoMiddlewareTest extends TestCase
 {
-    private Repository&MockObject $repository;
+    private Repository & MockObject $repository;
 
-    private StackInterface&MockObject $stack;
+    private StackInterface & MockObject $stack;
 
     private SudoMiddleware $middleware;
 
