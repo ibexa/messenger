@@ -32,9 +32,10 @@ final class SudoMiddlewareTest extends TestCase
         $this->middleware = new SudoMiddleware($this->repository);
     }
 
-    public function testHandleAddsSudoStampWhenNoneExists(): void
+    public function testHandleCallsSudoWhenSudoStampIsAttached(): void
     {
-        $envelope = new Envelope(new \stdClass());
+        $stamp = new SudoStamp();
+        $envelope = new Envelope(new \stdClass(), [$stamp]);
 
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
@@ -64,31 +65,29 @@ final class SudoMiddlewareTest extends TestCase
 
         $processedEnvelope = $this->middleware->handle($envelope, $this->stack);
 
-        self::assertNotSame($envelope, $processedEnvelope);
         self::assertSame($envelope->getMessage(), $processedEnvelope->getMessage());
-        self::assertNull($processedEnvelope->last(SudoStamp::class));
+        self::assertSame($stamp, $processedEnvelope->last(SudoStamp::class));
     }
 
-    public function testHandleDoesNotAddSudoStampWhenOneExists(): void
+    public function testHandleDoesNotCallSudoWhenSudoStampIsNotAttached(): void
     {
-        $stamp = new SudoStamp();
-        $envelope = new Envelope(new \stdClass(), [$stamp]);
+        $envelope = new Envelope(new \stdClass());
+
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
+        $nextMiddleware
+            ->expects(self::once())
+            ->method('handle')
+            ->with(self::callback(static function (Envelope $envelope): bool {
+                self::assertNull($envelope->last(SudoStamp::class));
+
+                return true;
+            }))
+            ->willReturnArgument(0);
 
         $this->stack
             ->expects(self::once())
             ->method('next')
             ->willReturn($nextMiddleware);
-
-        $nextMiddleware
-            ->expects(self::once())
-            ->method('handle')
-            ->with(self::callback(static function (Envelope $envelope): bool {
-                self::assertNotNull($envelope->last(SudoStamp::class));
-
-                return true;
-            }))
-            ->willReturnArgument(0);
 
         $this->repository
             ->expects(self::never())
@@ -97,6 +96,6 @@ final class SudoMiddlewareTest extends TestCase
         $processedEnvelope = $this->middleware->handle($envelope, $this->stack);
 
         self::assertSame($envelope->getMessage(), $processedEnvelope->getMessage());
-        self::assertSame($stamp, $processedEnvelope->last(SudoStamp::class));
+        self::assertNull($processedEnvelope->last(SudoStamp::class));
     }
 }
