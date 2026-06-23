@@ -44,8 +44,12 @@ final class DeduplicateStampNormalizer implements NormalizerInterface, Denormali
     /**
      * @phpstan-param TData $data
      */
-    public function denormalize($data, string $type, ?string $format = null, array $context = []): DeduplicateStamp
-    {
+    public function denormalize(
+        $data,
+        string $type,
+        ?string $format = null,
+        array $context = []
+    ): DeduplicateStamp {
         $stamp = (new ReflectionClass(DeduplicateStamp::class))->newInstanceWithoutConstructor();
 
         $key = $this->denormalizer->denormalize($data['key'], Key::class, $format, $context);
@@ -59,16 +63,23 @@ final class DeduplicateStampNormalizer implements NormalizerInterface, Denormali
         return $stamp;
     }
 
-    public function supportsDenormalization($data, string $type, ?string $format = null, array $context = []): bool
-    {
+    public function supportsDenormalization(
+        $data,
+        string $type,
+        ?string $format = null,
+        array $context = []
+    ): bool {
         return $type === DeduplicateStamp::class;
     }
 
     /**
      * @phpstan-return TData
      */
-    public function normalize(mixed $object, ?string $format = null, array $context = []): array
-    {
+    public function normalize(
+        mixed $object,
+        ?string $format = null,
+        array $context = []
+    ): array {
         assert($object instanceof DeduplicateStamp);
 
         return [
@@ -78,8 +89,11 @@ final class DeduplicateStampNormalizer implements NormalizerInterface, Denormali
         ];
     }
 
-    public function supportsNormalization($data, ?string $format = null, array $context = []): bool
-    {
+    public function supportsNormalization(
+        $data,
+        ?string $format = null,
+        array $context = []
+    ): bool {
         return $data instanceof DeduplicateStamp;
     }
 }

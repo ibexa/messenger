@@ -1,5 +1,6 @@
 /.php-cs-fixer.cache
 /.phpunit.result.cache
+/.deptrac.cache
 /composer.lock
 /node_modules/
 /vendor

@@ -1,9 +1,13 @@
+<?xml version="1.0"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
         bootstrap="vendor/autoload.php"
         failOnWarning="true"
-        colors="true">
+        failOnNotice="true"
+        failOnPhpunitNotice="true"
+        colors="true"
+>
     <testsuites>
         <testsuite name="bundle">
             <directory>tests/bundle</directory>

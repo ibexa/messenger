@@ -8,6 +8,4 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub;
 
-abstract class SampleMessageParent
-{
-}
+abstract class SampleMessageParent {}
