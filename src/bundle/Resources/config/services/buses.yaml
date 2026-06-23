@@ -29,6 +29,8 @@ services:
         arguments:
             - '@ibexa.messenger.lock_factory'
 
+    Ibexa\Bundle\Messenger\Middleware\UserPermissionMiddleware: ~
+
     Ibexa\Bundle\Messenger\Transport\Sender\SendersLocator:
         decorates: 'messenger.senders_locator'
         decoration_on_invalid: null
