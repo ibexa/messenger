@@ -8,6 +8,4 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub;
 
-final class SampleMessage extends SampleMessageParent implements SampleMessageInterface
-{
-}
+final class SampleMessage extends SampleMessageParent implements SampleMessageInterface {}

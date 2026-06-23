@@ -10,6 +10,7 @@ namespace Ibexa\Tests\Bundle\Messenger\Serializer\Normalizer;
 
 use Ibexa\Bundle\Messenger\Serializer\Normalizer\DeduplicateStampNormalizer;
 use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Lock\Key;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -19,10 +20,10 @@ final class DeduplicateStampNormalizerTest extends TestCase
 {
     private DeduplicateStampNormalizer $normalizer;
 
-    /** @var \Symfony\Component\Serializer\Normalizer\NormalizerInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var NormalizerInterface&MockObject */
     private NormalizerInterface $subNormalizer;
 
-    /** @var \Symfony\Component\Serializer\Normalizer\DenormalizerInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var DenormalizerInterface&MockObject */
     private DenormalizerInterface $subDenormalizer;
 
     protected function setUp(): void
@@ -44,8 +45,10 @@ final class DeduplicateStampNormalizerTest extends TestCase
      *     only_deduplicate_in_queue: bool,
      * } $expected
      */
-    public function testNormalize(DeduplicateStamp $stamp, array $expected): void
-    {
+    public function testNormalize(
+        DeduplicateStamp $stamp,
+        array $expected
+    ): void {
         $this->subDenormalizer->expects(self::never())->method(self::anything());
 
         $this->subNormalizer->expects(self::once())
@@ -67,8 +70,10 @@ final class DeduplicateStampNormalizerTest extends TestCase
      *     only_deduplicate_in_queue: bool,
      * } $data
      */
-    public function testDenormalize(DeduplicateStamp $expectedStamp, array $data): void
-    {
+    public function testDenormalize(
+        DeduplicateStamp $expectedStamp,
+        array $data
+    ): void {
         $this->subNormalizer->expects(self::never())->method(self::anything());
 
         $this->subDenormalizer

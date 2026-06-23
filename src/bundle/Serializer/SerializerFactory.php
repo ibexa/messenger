@@ -11,15 +11,17 @@ namespace Ibexa\Bundle\Messenger\Serializer;
 use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 
 final class SerializerFactory
 {
-    /** @var iterable<\Symfony\Component\Serializer\Normalizer\NormalizerInterface|\Symfony\Component\Serializer\Normalizer\DenormalizerInterface> */
+    /** @var iterable<NormalizerInterface|DenormalizerInterface> */
     private iterable $normalizers;
 
     /**
-     * @param iterable<\Symfony\Component\Serializer\Normalizer\NormalizerInterface|\Symfony\Component\Serializer\Normalizer\DenormalizerInterface> $normalizers
+     * @param iterable<NormalizerInterface|DenormalizerInterface> $normalizers
      */
     public function __construct(
         iterable $normalizers
