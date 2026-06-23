@@ -23,15 +23,13 @@ use Traversable;
 
 final class SendersLocatorTest extends TestCase
 {
-    /** @var SenderInterface&Stub */
-    private SenderInterface $senderStub;
+    private SenderInterface&Stub $senderStub;
 
-    /** @var MessageProviderInterface&MockObject */
-    private MessageProviderInterface $messageProviderMock;
+    private MessageProviderInterface&MockObject $messageProviderMock;
 
     protected function setUp(): void
     {
-        $this->senderStub = $this->createStub(SenderInterface::class);
+        $this->senderStub = self::createStub(SenderInterface::class);
         $this->messageProviderMock = $this->createMock(MessageProviderInterface::class);
     }
 
@@ -39,7 +37,7 @@ final class SendersLocatorTest extends TestCase
     {
         $envelope = new Envelope(new \stdClass());
         $innerSendersLocatorMock = $this->createMock(SendersLocatorInterface::class);
-        $innerSender = $this->createStub(SenderInterface::class);
+        $innerSender = self::createStub(SenderInterface::class);
         $innerSendersLocatorMock
             ->expects(self::once())
             ->method('getSenders')
@@ -98,14 +96,14 @@ final class SendersLocatorTest extends TestCase
 
     public function testListTypesIncludesInterfaces(): void
     {
-        $envelope = new Envelope($this->createStub(SampleMessageInterface::class));
+        $envelope = new Envelope(self::createStub(SampleMessageInterface::class));
 
         $this->assertMessageIsHandled($envelope);
     }
 
     public function testListTypesIncludesParents(): void
     {
-        $envelope = new Envelope($this->createStub(SampleMessageParent::class));
+        $envelope = new Envelope(self::createStub(SampleMessageParent::class));
 
         $this->assertMessageIsHandled($envelope);
     }

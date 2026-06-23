@@ -21,11 +21,9 @@ final class DeduplicateStampNormalizerTest extends TestCase
 {
     private DeduplicateStampNormalizer $normalizer;
 
-    /** @var NormalizerInterface&MockObject */
-    private NormalizerInterface $subNormalizer;
+    private NormalizerInterface&MockObject $subNormalizer;
 
-    /** @var DenormalizerInterface&MockObject */
-    private DenormalizerInterface $subDenormalizer;
+    private DenormalizerInterface&MockObject $subDenormalizer;
 
     protected function setUp(): void
     {
