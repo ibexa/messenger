@@ -17,12 +17,12 @@ use Symfony\Component\Messenger\Middleware\StackInterface;
 
 final class UserPermissionMiddleware implements MiddlewareInterface
 {
-    public function __construct(private PermissionResolver $permissionResolver)
-    {
-    }
+    public function __construct(private PermissionResolver $permissionResolver) {}
 
-    public function handle(Envelope $envelope, StackInterface $stack): Envelope
-    {
+    public function handle(
+        Envelope $envelope,
+        StackInterface $stack
+    ): Envelope {
         $stamp = $envelope->last(UserPermissionStamp::class);
         if ($stamp === null) {
             return $stack->next()->handle($envelope, $stack);

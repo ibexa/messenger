@@ -12,7 +12,5 @@ use Symfony\Component\Messenger\Stamp\StampInterface;
 
 final readonly class UserPermissionStamp implements StampInterface
 {
-    public function __construct(public int $userId)
-    {
-    }
+    public function __construct(public int $userId) {}
 }

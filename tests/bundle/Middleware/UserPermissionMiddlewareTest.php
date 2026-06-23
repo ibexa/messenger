@@ -13,7 +13,9 @@ use Ibexa\Bundle\Messenger\Stamp\UserPermissionStamp;
 use Ibexa\Contracts\Core\Repository\PermissionResolver;
 use Ibexa\Contracts\Core\Repository\Values\User\UserReference as APIUserReference;
 use Ibexa\Core\Repository\Values\User\UserReference;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\Messenger\Envelope;
@@ -26,22 +28,20 @@ final class UserPermissionMiddlewareTest extends TestCase
     private const PREVIOUS_USER_ID = 14;
     private const STAMP_USER_ID = 42;
 
-    private MockObject&PermissionResolver $permissionResolver;
+    private Stub & PermissionResolver $permissionResolver;
 
-    private MockObject&StackInterface $stack;
+    private MockObject & StackInterface $stack;
 
     private UserPermissionMiddleware $middleware;
 
     protected function setUp(): void
     {
-        $this->permissionResolver = $this->createMock(PermissionResolver::class);
+        $this->permissionResolver = self::createStub(PermissionResolver::class);
         $this->stack = $this->createMock(StackInterface::class);
         $this->middleware = new UserPermissionMiddleware($this->permissionResolver);
     }
 
-    /**
-     * @dataProvider provideForTestHandle
-     */
+    #[DataProvider('provideForTestHandle')]
     public function testHandle(
         ?UserPermissionStamp $stamp,
         int $expectedUserIdInNext,
