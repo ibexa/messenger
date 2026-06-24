@@ -15,7 +15,6 @@ use Ibexa\Contracts\Core\Repository\Values\User\UserReference as APIUserReferenc
 use Ibexa\Core\Repository\Values\User\UserReference;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\Messenger\Envelope;
@@ -28,7 +27,7 @@ final class UserPermissionMiddlewareTest extends TestCase
     private const PREVIOUS_USER_ID = 14;
     private const STAMP_USER_ID = 42;
 
-    private Stub & PermissionResolver $permissionResolver;
+    private MockObject & PermissionResolver $permissionResolver;
 
     private MockObject & StackInterface $stack;
 
@@ -36,7 +35,7 @@ final class UserPermissionMiddlewareTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->permissionResolver = self::createStub(PermissionResolver::class);
+        $this->permissionResolver = $this->createMock(PermissionResolver::class);
         $this->stack = $this->createMock(StackInterface::class);
         $this->middleware = new UserPermissionMiddleware($this->permissionResolver);
     }
@@ -51,12 +50,18 @@ final class UserPermissionMiddlewareTest extends TestCase
         $previousUserReference = new UserReference(self::PREVIOUS_USER_ID);
         $currentUserReference = $previousUserReference;
 
+        // With a stamp the middleware reads the current reference once and the next middleware
+        // reads it again; without a stamp only the next middleware reads it.
         $this->permissionResolver
+            ->expects(null !== $stamp ? self::exactly(2) : self::once())
             ->method('getCurrentUserReference')
             ->willReturnCallback(static function () use (&$currentUserReference): APIUserReference {
                 return $currentUserReference;
             });
+        // With a stamp the reference is set to the stamp user and then restored in the finally block;
+        // without a stamp it is never touched.
         $this->permissionResolver
+            ->expects(null !== $stamp ? self::exactly(2) : self::never())
             ->method('setCurrentUserReference')
             ->willReturnCallback(static function (APIUserReference $reference) use (&$currentUserReference): void {
                 $currentUserReference = $reference;

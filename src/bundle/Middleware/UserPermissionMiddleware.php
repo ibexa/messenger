@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 
-final class UserPermissionMiddleware implements MiddlewareInterface
+final readonly class UserPermissionMiddleware implements MiddlewareInterface
 {
     public function __construct(private PermissionResolver $permissionResolver) {}
 
