@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\Middleware;
 
-use Ibexa\Contracts\Messenger\Stamp\UserPermissionStamp;
 use Ibexa\Contracts\Core\Repository\PermissionResolver;
+use Ibexa\Contracts\Messenger\Stamp\UserPermissionStamp;
 use Ibexa\Core\Repository\Values\User\UserReference;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;

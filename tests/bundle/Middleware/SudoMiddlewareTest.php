@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\Middleware;
 
 use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
-use Ibexa\Contracts\Messenger\Stamp\SudoStamp;
 use Ibexa\Contracts\Core\Repository\Repository;
+use Ibexa\Contracts\Messenger\Stamp\SudoStamp;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
