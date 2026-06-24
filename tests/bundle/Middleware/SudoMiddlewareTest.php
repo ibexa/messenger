@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\Middleware;
 
 use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
-use Ibexa\Bundle\Messenger\Stamp\SudoStamp;
+use Ibexa\Contracts\Messenger\Stamp\SudoStamp;
 use Ibexa\Contracts\Core\Repository\Repository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

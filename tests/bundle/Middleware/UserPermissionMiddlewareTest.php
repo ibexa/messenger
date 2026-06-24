@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\Middleware;
 
 use Ibexa\Bundle\Messenger\Middleware\UserPermissionMiddleware;
-use Ibexa\Bundle\Messenger\Stamp\UserPermissionStamp;
+use Ibexa\Contracts\Messenger\Stamp\UserPermissionStamp;
 use Ibexa\Contracts\Core\Repository\PermissionResolver;
 use Ibexa\Contracts\Core\Repository\Values\User\UserReference as APIUserReference;
 use Ibexa\Core\Repository\Values\User\UserReference;
