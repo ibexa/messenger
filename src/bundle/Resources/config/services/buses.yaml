@@ -25,6 +25,8 @@ services:
 
     Ibexa\Bundle\Messenger\Middleware\SudoMiddleware: ~
 
+    Ibexa\Bundle\Messenger\Middleware\UserPermissionMiddleware: ~
+
     Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware:
         arguments:
             - '@ibexa.messenger.lock_factory'

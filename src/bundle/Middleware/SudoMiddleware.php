@@ -30,6 +30,14 @@ final class SudoMiddleware implements MiddlewareInterface
     ): Envelope {
         $stamp = $envelope->last(SudoStamp::class);
         if ($stamp === null) {
+            // todo add this deprecation in 5.0.x release
+            trigger_deprecation(
+                'ibexa/messenger',
+                '5.0.x',
+                'Since 6.0.0, %s will not be attached automatically to all messages. You will need to add the stamp explicitly when dispatching the message.',
+                SudoStamp::class,
+            );
+
             $envelope = $envelope->with(new SudoStamp());
 
             $envelope = $this->repository->sudo(
