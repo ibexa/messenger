@@ -10,6 +10,8 @@ namespace Ibexa\Tests\Bundle\Messenger\DependencyInjection;
 
 use Ibexa\Bundle\Messenger\DependencyInjection\IbexaMessengerExtension;
 use Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware;
+use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
+use Ibexa\Bundle\Messenger\Middleware\UserPermissionMiddleware;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 final class IbexaMessengerExtensionTest extends AbstractExtensionTestCase
@@ -33,6 +35,8 @@ final class IbexaMessengerExtensionTest extends AbstractExtensionTestCase
     {
         $this->load();
 
+        self::assertTrue($this->container->hasDefinition(SudoMiddleware::class));
+        self::assertTrue($this->container->hasDefinition(UserPermissionMiddleware::class));
         self::assertTrue($this->container->hasDefinition(DeduplicateMiddleware::class));
         self::assertTrue($this->container->hasDefinition('ibexa.messenger.lock_factory'));
         self::assertTrue($this->container->hasDefinition('ibexa.messenger.lock_store.dbal'));
@@ -46,6 +50,8 @@ final class IbexaMessengerExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
+        self::assertTrue($this->container->hasDefinition(SudoMiddleware::class));
+        self::assertTrue($this->container->hasDefinition(UserPermissionMiddleware::class));
         self::assertFalse($this->container->hasDefinition(DeduplicateMiddleware::class));
         self::assertFalse($this->container->hasDefinition('ibexa.messenger.lock_factory'));
         self::assertFalse($this->container->hasDefinition('ibexa.messenger.lock_store.dbal'));
