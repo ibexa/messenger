@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\Messenger\Serializer\Normalizer;
 
 use Closure;
-use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use Ibexa\Contracts\Messenger\Stamp\DeduplicateStamp;
 use ReflectionClass;
 use Symfony\Component\Lock\Key;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;

@@ -55,7 +55,7 @@ parameters:
 			path: src/bundle/Serializer/Normalizer/DeduplicateStampNormalizer.php
 
 		-
-			message: '#^Return type \(Ibexa\\Bundle\\Messenger\\Stamp\\DeduplicateStamp\) of method Ibexa\\Bundle\\Messenger\\Serializer\\Normalizer\\DeduplicateStampNormalizer\:\:denormalize\(\) should be covariant with return type \(\(\$type is class\-string\<object\> \? object \: mixed\)\) of method Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface\:\:denormalize\(\)$#'
+			message: '#^Return type \(Ibexa\\Contracts\\Messenger\\Stamp\\DeduplicateStamp\) of method Ibexa\\Bundle\\Messenger\\Serializer\\Normalizer\\DeduplicateStampNormalizer\:\:denormalize\(\) should be covariant with return type \(\(\$type is class\-string\<object\> \? object \: mixed\)\) of method Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface\:\:denormalize\(\)$#'
 			identifier: method.childReturnType
 			count: 1
 			path: src/bundle/Serializer/Normalizer/DeduplicateStampNormalizer.php

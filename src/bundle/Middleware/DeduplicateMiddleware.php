@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\Middleware;
 
-use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use Ibexa\Contracts\Messenger\Stamp\DeduplicateStamp;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\Integration\Messenger;
 
-use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use Ibexa\Contracts\Messenger\Stamp\DeduplicateStamp;
 use Ibexa\Contracts\Test\Core\IbexaKernelTestCase;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessage;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessageHandler;
