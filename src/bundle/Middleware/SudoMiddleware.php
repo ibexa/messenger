@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\Middleware;
 
-use Ibexa\Bundle\Messenger\Stamp\SudoStamp;
 use Ibexa\Contracts\Core\Repository\Repository;
+use Ibexa\Contracts\Messenger\Stamp\SudoStamp;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;

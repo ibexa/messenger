@@ -6,11 +6,8 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\Bundle\Messenger\Stamp;
+namespace Ibexa\Contracts\Messenger\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
-final readonly class UserPermissionStamp implements StampInterface
-{
-    public function __construct(public int $userId) {}
-}
+final class SudoStamp implements StampInterface {}
