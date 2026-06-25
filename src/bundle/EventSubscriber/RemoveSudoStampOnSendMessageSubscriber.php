@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\EventSubscriber;
 
-use Ibexa\Bundle\Messenger\Stamp\SudoStamp;
+use Ibexa\Contracts\Messenger\Stamp\SudoStamp;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 
