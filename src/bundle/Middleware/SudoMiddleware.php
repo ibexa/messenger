@@ -14,15 +14,11 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 
-final class SudoMiddleware implements MiddlewareInterface
+final readonly class SudoMiddleware implements MiddlewareInterface
 {
-    private Repository $repository;
-
     public function __construct(
-        Repository $repository
-    ) {
-        $this->repository = $repository;
-    }
+        private Repository $repository
+    ) {}
 
     public function handle(
         Envelope $envelope,
@@ -30,24 +26,11 @@ final class SudoMiddleware implements MiddlewareInterface
     ): Envelope {
         $stamp = $envelope->last(SudoStamp::class);
         if ($stamp === null) {
-            trigger_deprecation(
-                'ibexa/messenger',
-                '5.0.9',
-                'Since 6.0.0, %s will not be attached automatically to all messages. You will need to add the stamp explicitly when dispatching the message.',
-                SudoStamp::class,
-            );
-
-            $envelope = $envelope->with(new SudoStamp());
-
-            $envelope = $this->repository->sudo(
-                static fn (): Envelope => $stack->next()->handle($envelope, $stack)
-            );
-
-            assert($envelope instanceof Envelope);
-
-            return $envelope->withoutStampsOfType(SudoStamp::class);
+            return $stack->next()->handle($envelope, $stack);
         }
 
-        return $stack->next()->handle($envelope, $stack);
+        return $this->repository->sudo(
+            static fn (): Envelope => $stack->next()->handle($envelope, $stack)
+        );
     }
 }
