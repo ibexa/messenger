@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\Serializer\Normalizer;
 
 use Ibexa\Bundle\Messenger\Serializer\Normalizer\DeduplicateStampNormalizer;
-use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
+use Ibexa\Contracts\Messenger\Stamp\DeduplicateStamp;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
