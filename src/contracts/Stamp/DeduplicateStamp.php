@@ -17,7 +17,7 @@ use Symfony\Component\Messenger\Stamp\StampInterface;
  *
  * Original code: https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/Messenger/Stamp/DeduplicateStamp.php
  */
-class DeduplicateStamp implements StampInterface
+final class DeduplicateStamp implements StampInterface
 {
     private Key $key;
 
