@@ -1,0 +1,8 @@
+services:
+    Ibexa\Bundle\Messenger\Migration\InstallSchemaMigration:
+        autowire: true
+        public: false
+        arguments:
+            $connection: '@ibexa.persistence.connection'
+        tags:
+            - { name: !php/const Ibexa\Contracts\DoctrineMigrations\Migrations\IbexaMigrationTag::TAG }
