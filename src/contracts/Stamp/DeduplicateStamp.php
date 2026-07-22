@@ -18,7 +18,7 @@ use Symfony\Component\Messenger\Stamp\StampInterface;
  *
  * Original code: https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/Messenger/Stamp/DeduplicateStamp.php
  *
- * @deprecated since Ibexa 5.0.9. Starting from Ibexa 6.0, the native {@see SymfonyDeduplicateStamp}
+ * @deprecated since Ibexa 5.0.10. Starting from Ibexa 6.0, the native {@see SymfonyDeduplicateStamp}
  * will be used instead. Ibexa 5.0 is not prepared to handle the Symfony stamp yet, so keep using
  * this class until you upgrade.
  */
@@ -37,7 +37,7 @@ class DeduplicateStamp implements StampInterface
     ) {
         trigger_deprecation(
             'ibexa/messenger',
-            '5.0.9',
+            '5.0.10',
             'The "%s" class is deprecated, starting from Ibexa 6.0 the native "%s" will be used instead.',
             self::class,
             SymfonyDeduplicateStamp::class,
