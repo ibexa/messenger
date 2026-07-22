@@ -8,10 +8,9 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\DependencyInjection;
 
-use Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware;
+use Ibexa\Bundle\Messenger\EventListener\ReleaseDeduplicationLockOnFailureListener;
 use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
 use Ibexa\Bundle\Messenger\Middleware\UserPermissionMiddleware;
-use Ibexa\Bundle\Messenger\Serializer\Normalizer\LockKeyNormalizer;
 use Ibexa\Contracts\Messenger\Transport\MessageProviderInterface;
 use LogicException;
 use Symfony\Component\Config\FileLocator;
@@ -22,7 +21,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Lock\PersistingStoreInterface;
-use Symfony\Component\Lock\Serializer\LockNormalizer as SymfonyLockNormalizer;
 use Symfony\Component\Lock\Store\StoreFactory;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -60,7 +58,6 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         $loader->load('services.yaml');
 
         $this->configureLockStorage($mergedConfig['deduplication_lock_storage'], $container);
-        $this->configureLockNormalizerBackport($container);
         $this->registerMessengerConfiguration($mergedConfig, $container);
 
         if ($this->shouldLoadTestServices($container)) {
@@ -128,7 +125,7 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         ];
 
         if ($mergedConfig['deduplication_lock_storage']['enabled'] === true) {
-            $middleware[] = ['id' => DeduplicateMiddleware::class];
+            $middleware[] = ['id' => 'ibexa.messenger.deduplicate_middleware'];
         }
 
         $middleware = array_merge(
@@ -153,12 +150,14 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         ContainerBuilder $container
     ): void {
         if ($lockStorageConfig['enabled'] === false) {
-            $container->removeDefinition(DeduplicateMiddleware::class);
+            $container->removeDefinition('ibexa.messenger.deduplicate_middleware');
             $container->removeDefinition('ibexa.messenger.lock_factory');
             $container->removeDefinition('ibexa.messenger.lock_store.dbal');
 
             return;
         }
+
+        $this->registerDeduplicationFailureListener($container);
 
         $lockStorageType = $lockStorageConfig['type'];
         if ($lockStorageType === 'doctrine') {
@@ -200,14 +199,25 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         ));
     }
 
-    private function configureLockNormalizerBackport(ContainerBuilder $container): void
+    private function registerDeduplicationFailureListener(ContainerBuilder $container): void
     {
-        // Symfony 7.4 contains proper implementation
-        if (class_exists(SymfonyLockNormalizer::class)) {
-            $container->removeDefinition(LockKeyNormalizer::class);
-            $definition = new Definition(SymfonyLockNormalizer::class);
-            $definition->addTag('ibexa.messenger.serializer.normalizer', ['priority' => -60]);
-            $container->setDefinition('ibexa.messenger.lock_normalizer', $definition);
-        }
+        // Release the deduplication lock when a message definitively fails, so a new dispatch of
+        // the same key is not blocked until the lock's TTL expires. Prefer Symfony's native listener
+        // (available since Symfony 8.1); fall back to our backport otherwise. Either way it must be
+        // wired to our lock factory, because Symfony's own native listener uses the default
+        // "lock.factory" and would not release locks stored in the "ibexa_messenger_lock_keys" table.
+        // @todo Remove the backport class and this fallback once the minimum Symfony version is >= 8.1.
+        $nativeListenerClass = 'Symfony\Component\Messenger\EventListener\ReleaseDeduplicationLockOnFailureListener';
+        $listenerClass = class_exists($nativeListenerClass)
+            ? $nativeListenerClass
+            : ReleaseDeduplicationLockOnFailureListener::class;
+
+        $definition = new Definition($listenerClass);
+        $definition->setArgument(0, new Reference('ibexa.messenger.lock_factory'));
+        $definition->addTag('kernel.event_subscriber');
+        $container->setDefinition(
+            'ibexa.messenger.release_deduplication_lock_on_failure_listener',
+            $definition,
+        );
     }
 }
