@@ -27,6 +27,14 @@ final class ReleaseDeduplicationLockOnFailureListener implements EventSubscriber
 {
     public function __construct(private LockFactory $lockFactory) {}
 
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            // Must have lower priority than SendFailedMessageForRetryListener (100) so willRetry() is already set.
+            WorkerMessageFailedEvent::class => ['onMessageFailed', -10],
+        ];
+    }
+
     public function onMessageFailed(WorkerMessageFailedEvent $event): void
     {
         if ($event->willRetry()) {
@@ -43,13 +51,5 @@ final class ReleaseDeduplicationLockOnFailureListener implements EventSubscriber
         }
 
         $this->lockFactory->createLockFromKey($stamp->getKey())->release();
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            // Must have lower priority than SendFailedMessageForRetryListener (100) so willRetry() is already set.
-            WorkerMessageFailedEvent::class => ['onMessageFailed', -10],
-        ];
     }
 }
