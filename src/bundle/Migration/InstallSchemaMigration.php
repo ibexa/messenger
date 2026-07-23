@@ -35,6 +35,12 @@ final class InstallSchemaMigration extends AbstractSqlMigration implements Ibexa
     {
         $this->abortIfUnsupportedPlatform(SqlPlatform::MYSQL, SqlPlatform::POSTGRESQL, SqlPlatform::SQLITE);
 
+        $this->skipIf(
+            $schema->hasTable('ibexa_messenger_messages')
+            && $schema->hasTable('ibexa_messenger_lock_keys'),
+            'Schema already migrated: tables already exist.'
+        );
+
         if ($this->isMySQL()) {
             $this->addSqlFile(__DIR__ . '/sql/install-schema-mysql.sql');
         } elseif ($this->isPostgreSQL()) {
