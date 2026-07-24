@@ -15,6 +15,7 @@
         "symfony/event-dispatcher": "^7.4",
         "symfony/http-foundation": "^7.4",
         "symfony/http-kernel": "^7.4",
+        "symfony/lock": "^7.4",
         "symfony/messenger": "^7.4",
         "symfony/yaml": "^7.4"
     },

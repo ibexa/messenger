@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\Integration\Messenger;
 
-use Ibexa\Contracts\Messenger\Stamp\DeduplicateStamp;
 use Ibexa\Contracts\Test\Core\IbexaKernelTestCase;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessage;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessageHandler;
@@ -17,6 +16,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DeduplicateStamp;
 use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
