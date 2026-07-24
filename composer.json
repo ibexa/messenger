@@ -5,6 +5,12 @@
     "keywords": [
         "ibexa-dxp"
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ibexa/doctrine-migrations.git"
+        }
+    ],
     "require": {
         "php": ">=8.3",
         "ibexa/core": "~6.0.x-dev",
@@ -17,7 +23,8 @@
         "symfony/http-kernel": "^7.4",
         "symfony/lock": "^7.4",
         "symfony/messenger": "^7.4",
-        "symfony/yaml": "^7.4"
+        "symfony/yaml": "^7.4",
+        "ibexa/doctrine-migrations": "dev-feat/doctrine-migrations-5.0"
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^8",
