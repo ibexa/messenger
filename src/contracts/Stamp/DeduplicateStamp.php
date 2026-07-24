@@ -10,12 +10,17 @@ namespace Ibexa\Contracts\Messenger\Stamp;
 
 use Symfony\Component\Lock\Key;
 use Symfony\Component\Messenger\Exception\LogicException;
+use Symfony\Component\Messenger\Stamp\DeduplicateStamp as SymfonyDeduplicateStamp;
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
 /**
  * (c) Fabien Potencier <fabien@symfony.com>.
  *
  * Original code: https://github.com/symfony/symfony/blob/7.3/src/Symfony/Component/Messenger/Stamp/DeduplicateStamp.php
+ *
+ * @deprecated since Ibexa 5.0.10. Starting from Ibexa 6.0, the native {@see SymfonyDeduplicateStamp}
+ * will be used instead. Ibexa 5.0 is not prepared to handle the Symfony stamp yet, so keep using
+ * this class until you upgrade.
  */
 final class DeduplicateStamp implements StampInterface
 {
@@ -30,6 +35,14 @@ final class DeduplicateStamp implements StampInterface
         ?float $ttl = 300.0,
         bool $onlyDeduplicateInQueue = false
     ) {
+        trigger_deprecation(
+            'ibexa/messenger',
+            '5.0.10',
+            'The "%s" class is deprecated, starting from Ibexa 6.0 the native "%s" will be used instead.',
+            self::class,
+            SymfonyDeduplicateStamp::class,
+        );
+
         if (!class_exists(Key::class)) {
             throw new LogicException(sprintf(
                 'You cannot use the "%s" as the Lock component is not installed. Try running "composer require symfony/lock".',
