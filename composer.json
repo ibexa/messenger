@@ -5,12 +5,6 @@
     "keywords": [
         "ibexa-dxp"
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ibexa/doctrine-migrations.git"
-        }
-    ],
     "require": {
         "php": ">=8.3",
         "ibexa/core": "~6.0.x-dev",
