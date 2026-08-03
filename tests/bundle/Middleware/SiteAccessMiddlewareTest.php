@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\Middleware;
 
 use Ibexa\Bundle\Messenger\Middleware\SiteAccessMiddleware;
-use Ibexa\Bundle\Messenger\Stamp\SiteAccessStamp;
+use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
 use Ibexa\Core\MVC\Symfony\Event\ScopeChangeEvent;
 use Ibexa\Core\MVC\Symfony\MVCEvents;
 use Ibexa\Core\MVC\Symfony\SiteAccess;

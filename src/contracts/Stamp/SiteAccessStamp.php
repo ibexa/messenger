@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\Bundle\Messenger\Stamp;
+namespace Ibexa\Contracts\Messenger\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 

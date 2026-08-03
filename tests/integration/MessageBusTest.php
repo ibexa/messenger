@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\Messenger;
 
 use Ibexa\Bundle\Messenger\Stamp\DeduplicateStamp;
-use Ibexa\Bundle\Messenger\Stamp\SiteAccessStamp;
+use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
 use Ibexa\Contracts\Test\Core\IbexaKernelTestCase;
 use Ibexa\Core\MVC\Symfony\Event\ScopeChangeEvent;
 use Ibexa\Core\MVC\Symfony\MVCEvents;

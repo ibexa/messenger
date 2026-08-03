@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\EventSubscriber;
 
 use Ibexa\Bundle\Messenger\EventSubscriber\SendMessageSiteAccessSubscriber;
-use Ibexa\Bundle\Messenger\Stamp\SiteAccessStamp;
+use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
 use Ibexa\Core\MVC\Symfony\SiteAccess;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
 use PHPUnit\Framework\TestCase;

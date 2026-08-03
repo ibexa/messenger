@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\EventSubscriber;
 
-use Ibexa\Bundle\Messenger\Stamp\SiteAccessStamp;
+use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
