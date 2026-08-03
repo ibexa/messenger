@@ -23,6 +23,8 @@ services:
                 alias: ibexa.messenger.transport
                 is_failure_transport: false
 
+    Ibexa\Bundle\Messenger\Middleware\SiteAccessMiddleware: ~
+
     Ibexa\Bundle\Messenger\Middleware\SudoMiddleware: ~
 
     ibexa.messenger.deduplicate_middleware:
