@@ -5,3 +5,5 @@ services:
         public: false
 
     Ibexa\Bundle\Messenger\EventSubscriber\RemoveSudoStampOnSendMessageSubscriber: ~
+
+    Ibexa\Bundle\Messenger\EventSubscriber\SendMessageSiteAccessSubscriber: ~
