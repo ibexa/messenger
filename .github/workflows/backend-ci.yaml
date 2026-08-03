@@ -114,6 +114,7 @@ jobs:
                     gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
                     satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
                     satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
+                    php-extensions: pdo_pgsql, gd
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -170,6 +171,7 @@ jobs:
                     gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
                     satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
                     satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
+                    php-extensions: pdo_mysql, gd
 
             -   run: composer require symfony/redis-messenger ^7.3
                 name: Install Redis messenger
@@ -225,6 +227,7 @@ jobs:
                     gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
                     satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
                     satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
+                    php-extensions: pdo_mysql, gd
 
             -   name: Setup problem matchers for PHPUnit
                 run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
