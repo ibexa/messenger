@@ -31,6 +31,8 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
 
     public function testGetSubscribedEvents(): void
     {
+        $this->siteAccessService->expects(self::never())->method(self::anything());
+
         $subscribedEvents = SendMessageSiteAccessSubscriber::getSubscribedEvents();
 
         self::assertArrayHasKey(SendMessageToTransportsEvent::class, $subscribedEvents);
