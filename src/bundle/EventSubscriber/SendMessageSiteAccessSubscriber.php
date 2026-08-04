@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\Messenger\EventSubscriber;
 
 use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
+use Ibexa\Core\MVC\Symfony\SiteAccess;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
@@ -33,7 +34,7 @@ final class SendMessageSiteAccessSubscriber implements EventSubscriberInterface
     public function onSendMessageToTransport(SendMessageToTransportsEvent $event): void
     {
         $siteAccess = $this->siteAccessService->getCurrent();
-        if ($siteAccess === null) {
+        if ($siteAccess === null || $siteAccess->matchingType === SiteAccess::MATCHING_TYPE_UNINITIALIZED) {
             return;
         }
 
