@@ -74,4 +74,23 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
         self::assertNull($updatedEnvelope->last(SiteAccessStamp::class));
         self::assertSame($envelope, $updatedEnvelope);
     }
+
+    public function testOnSendMessageToTransportDoesNothingWhenSiteAccessIsUninitialized(): void
+    {
+        $siteAccess = new SiteAccess('default', SiteAccess::MATCHING_TYPE_UNINITIALIZED);
+        $envelope = new Envelope(new \stdClass());
+        $event = new SendMessageToTransportsEvent($envelope);
+
+        $this->siteAccessService
+            ->expects(self::once())
+            ->method('getCurrent')
+            ->willReturn($siteAccess);
+
+        $this->subscriber->onSendMessageToTransport($event);
+
+        $updatedEnvelope = $event->getEnvelope();
+
+        self::assertNull($updatedEnvelope->last(SiteAccessStamp::class));
+        self::assertSame($envelope, $updatedEnvelope);
+    }
 }
