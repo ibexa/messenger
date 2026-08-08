@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\Messenger\DependencyInjection;
 
 use Ibexa\Bundle\Messenger\Middleware\DeduplicateMiddleware;
+use Ibexa\Bundle\Messenger\Middleware\SiteAccessMiddleware;
 use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
 use Ibexa\Bundle\Messenger\Middleware\UserPermissionMiddleware;
 use Ibexa\Bundle\Messenger\Serializer\Normalizer\LockKeyNormalizer;
@@ -125,6 +126,7 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         $middleware = [
             ['id' => SudoMiddleware::class],
             ['id' => UserPermissionMiddleware::class],
+            ['id' => SiteAccessMiddleware::class],
         ];
 
         if ($mergedConfig['deduplication_lock_storage']['enabled'] === true) {
