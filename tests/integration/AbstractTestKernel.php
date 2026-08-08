@@ -12,6 +12,7 @@ use DAMA\DoctrineTestBundle\DAMADoctrineTestBundle;
 use Ibexa\Bundle\CorePersistence\IbexaCorePersistenceBundle;
 use Ibexa\Bundle\Messenger\IbexaMessengerBundle;
 use Ibexa\Contracts\Test\Core\IbexaTestKernel;
+use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessageHandler;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -52,6 +53,7 @@ abstract class AbstractTestKernel extends IbexaTestKernel
         yield from parent::getExposedServicesByClass();
 
         yield FooMessageHandler::class;
+        yield SiteAccessServiceInterface::class;
     }
 
     protected static function getExposedServicesById(): iterable
