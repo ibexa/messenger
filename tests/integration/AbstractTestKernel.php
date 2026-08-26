@@ -11,6 +11,7 @@ namespace Ibexa\Tests\Integration\Messenger;
 use DAMA\DoctrineTestBundle\DAMADoctrineTestBundle;
 use Ibexa\Bundle\CorePersistence\IbexaCorePersistenceBundle;
 use Ibexa\Bundle\Messenger\IbexaMessengerBundle;
+use Ibexa\Bundle\Test\Core\IbexaTestCoreBundle;
 use Ibexa\Contracts\Test\Core\IbexaTestKernel;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessageHandler;
@@ -33,6 +34,8 @@ abstract class AbstractTestKernel extends IbexaTestKernel
     public function registerBundles(): iterable
     {
         yield from parent::registerBundles();
+
+        yield new IbexaTestCoreBundle();
 
         yield new IbexaCorePersistenceBundle();
         yield new DAMADoctrineTestBundle();
