@@ -81,7 +81,7 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
     {
         $siteAccess = new SiteAccess('default', SiteAccess::MATCHING_TYPE_UNINITIALIZED);
         $envelope = new Envelope(new \stdClass());
-        $event = new SendMessageToTransportsEvent($envelope);
+        $event = new SendMessageToTransportsEvent($envelope, []);
 
         $this->siteAccessService
             ->expects(self::once())
