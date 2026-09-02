@@ -13,42 +13,6 @@ parameters:
 			path: src/bundle/Lock/Store/DoctrineDbalStore.php
 
 		-
-			message: '#^Parameter \#2 \$ttl of method Symfony\\Component\\Lock\\Store\\DoctrineDbalStore\:\:putOffExpiration\(\) expects float, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$expirationCol \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$idCol \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$table \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$tokenCol \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
 			message: '#^Parameter \#1 \$data \(array\{key\: mixed, ttl\?\: float\|null, only_deduplicate_in_queue\?\: bool\|null\}\) of method Ibexa\\Bundle\\Messenger\\Serializer\\Normalizer\\DeduplicateStampNormalizer\:\:denormalize\(\) should be contravariant with parameter \$data \(mixed\) of method Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface\:\:denormalize\(\)$#'
 			identifier: method.childParameterType
 			count: 1
