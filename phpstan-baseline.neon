@@ -13,58 +13,10 @@ parameters:
 			path: src/bundle/Lock/Store/DoctrineDbalStore.php
 
 		-
-			message: '#^Parameter \#2 \$ttl of method Symfony\\Component\\Lock\\Store\\DoctrineDbalStore\:\:putOffExpiration\(\) expects float, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$expirationCol \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$idCol \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$table \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Part \$tokenCol \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/bundle/Lock/Store/DoctrineDbalStore.php
-
-		-
 			message: '#^Method Ibexa\\Bundle\\Messenger\\Transport\\Sender\\SendersLocator\:\:listTypes\(\) should return array\<class\-string\> but returns array\.$#'
 			identifier: return.type
 			count: 1
 			path: src/bundle/Transport/Sender/SendersLocator.php
-
-		-
-			message: '#^Cannot call method import\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/integration/bootstrap.php
-
-		-
-			message: '#^Cannot call method importSchema\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/integration/bootstrap.php
 
 		-
 			message: '#^Cannot cast mixed to string\.$#'

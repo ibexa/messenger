@@ -6,20 +6,16 @@
  */
 declare(strict_types=1);
 
-use Ibexa\Contracts\Core\Search\VersatileHandler;
-use Ibexa\Contracts\Core\Test\Persistence\Fixture\FixtureImporter;
+use Ibexa\Contracts\Test\Core\Bootstrapper\Bootstrapper;
+use Ibexa\Contracts\Test\Core\Bootstrapper\PurgeSearchIndexHook;
 use Ibexa\Contracts\Test\Core\IbexaTestKernel;
-use Ibexa\Tests\Core\Repository\LegacySchemaImporter;
-use Psr\Container\ContainerInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\HttpKernel\Kernel;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 chdir(dirname(__DIR__, 2));
 
-$kernel = (static function (): IbexaTestKernel {
+$kernelClass = (static function (): string {
     if (!isset($_SERVER['KERNEL_CLASS']) && !isset($_ENV['KERNEL_CLASS'])) {
         throw new LogicException(
             'You must set the KERNEL_CLASS environment variable to the fully-qualified class name of your Kernel'
@@ -40,50 +36,14 @@ $kernel = (static function (): IbexaTestKernel {
         throw new RuntimeException(sprintf('Class "%s" is not a "%s".', $class, Kernel::class));
     }
 
-    return new $class('test', true);
+    return $class;
 })();
-$kernel->boot();
 
-$application = new Application($kernel);
-$application->setAutoExit(false);
-
-$databaseUrl = getenv('DATABASE_URL');
-if ($databaseUrl !== false && 'sqlite' !== substr($databaseUrl, 0, 6)) {
-    $application->run(new ArrayInput([
-        'command' => 'doctrine:database:drop',
-        '--if-exists' => '1',
-        '--force' => '1',
-        '--quiet' => true,
-    ]));
-}
-
-$application->run(new ArrayInput([
-    'command' => 'doctrine:database:create',
-    '--quiet' => true,
-]));
-
-$application->run(new ArrayInput([
-    'command' => 'doctrine:schema:update',
-    '--em' => 'ibexa_default',
-    '--force' => true,
-    '--quiet' => true,
-]));
-
-/** @var ContainerInterface $testContainer */
-$testContainer = $kernel->getContainer()->get('test.service_container');
-
-$schemaImporter = $testContainer->get(LegacySchemaImporter::class);
-foreach ($kernel->getSchemaFiles() as $file) {
-    $schemaImporter->importSchema($file);
-}
-
-$fixtureImporter = $testContainer->get(FixtureImporter::class);
-foreach ($kernel->getFixtures() as $fixture) {
-    $fixtureImporter->import($fixture);
-}
-
-/** @var VersatileHandler $handler */
-$handler = $testContainer->get('ibexa.spi.search');
-$handler->purgeIndex();
-
-$kernel->shutdown();
+// Database preparation, schema import, and fixture import all stay at Bootstrapper's defaults
+// (enabled) to match this suite's actual needs: MessageBusTest exercises a real Doctrine messenger
+// transport backed by the `ibexa_messenger_messages` table from AbstractTestKernel::getSchemaFiles(),
+// so schema import can't be skipped here. Only the search index purge needs to be explicitly
+// requested, since PurgeSearchIndexHook defaults to off but the old bootstrap.php always purged.
+(new Bootstrapper())->bootstrap($kernelClass, [
+    PurgeSearchIndexHook::class => [PurgeSearchIndexHook::OPTION_PURGE_INDEX => true],
+]);
