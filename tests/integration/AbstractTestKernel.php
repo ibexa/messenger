@@ -21,16 +21,6 @@ use Symfony\Component\Messenger\Transport\TransportInterface;
 
 abstract class AbstractTestKernel extends IbexaTestKernel
 {
-    public function getSchemaFiles(): iterable
-    {
-        yield from parent::getSchemaFiles();
-
-        yield from [
-            $this->locateResource('@IbexaCoreBundle/Resources/config/storage/legacy/schema.yaml'),
-            $this->locateResource('@IbexaMessengerBundle/Resources/config/schema.yaml'),
-        ];
-    }
-
     public function registerBundles(): iterable
     {
         yield from parent::registerBundles();
