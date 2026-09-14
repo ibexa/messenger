@@ -1,11 +1,11 @@
-name: CI
+name: Backend CI
 
 on:
     push:
         branches:
-            - main
             - '[0-9]+.[0-9]+'
     pull_request: ~
+    workflow_dispatch: ~
 
 jobs:
     cs-fix:
@@ -16,17 +16,21 @@ jobs:
                 php:
                     - '8.3'
         steps:
-            -   uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
-            -   uses: ibexa/gh-workflows/actions/composer-install@main
-                with:
-                    gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
-                    gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
-                    satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
-                    satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
+            - uses: ibexa/gh-workflows/actions/composer-install@main
+              with:
+                  php-version: ${{ matrix.php }}
+                  gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                  gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                  satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                  satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
 
-            -   name: Run code style check
-                run: composer run-script check-cs -- --format=checkstyle | cs2pr
+            - name: Run code style check
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  composer run-script check-cs -- --format=checkstyle | cs2pr
 
     deptrac:
         name: Deptrac
@@ -61,23 +65,24 @@ jobs:
                     - '8.4'
 
         steps:
-            -   uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             -   uses: ibexa/gh-workflows/actions/composer-install@main
                 with:
+                    php-version: ${{ matrix.php }}
                     gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
                     gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
                     satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
                     satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
 
-            -   name: Setup problem matchers for PHPUnit
-                run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+            - name: Setup problem matchers for PHPUnit
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-            -   name: Run PHPStan analysis
-                run: composer run-script phpstan
+            - name: Run PHPStan analysis
+              run: composer run-script phpstan
 
-            -   name: Run test suite
-                run: composer run-script --timeout=600 test
+            - name: Run test suite
+              run: composer run-script --timeout=600 test
 
     integration-tests-postgres:
         name: PostgreSQL integration tests
@@ -106,10 +111,11 @@ jobs:
                     - '8.4'
 
         steps:
-            -   uses: actions/checkout@v6
+            -   uses: actions/checkout@v7
 
             -   uses: ibexa/gh-workflows/actions/composer-install@main
                 with:
+                    php-version: ${{ matrix.php }}
                     gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
                     gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
                     satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
@@ -163,10 +169,11 @@ jobs:
                     - '8.4'
 
         steps:
-            -   uses: actions/checkout@v6
+            -   uses: actions/checkout@v7
 
             -   uses: ibexa/gh-workflows/actions/composer-install@main
                 with:
+                    php-version: ${{ matrix.php }}
                     gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
                     gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
                     satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
@@ -219,10 +226,11 @@ jobs:
                     - '8.4'
 
         steps:
-            -   uses: actions/checkout@v6
+            -   uses: actions/checkout@v7
 
             -   uses: ibexa/gh-workflows/actions/composer-install@main
                 with:
+                    php-version: ${{ matrix.php }}
                     gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
                     gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
                     satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
