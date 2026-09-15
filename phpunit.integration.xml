@@ -1,10 +1,21 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
          bootstrap="tests/integration/bootstrap.php"
+         cacheDirectory=".phpunit.cache"
          beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
          failOnWarning="true"
-         verbose="true">
+         failOnNotice="true"
+         failOnPhpunitNotice="true"
+         failOnPhpunitDeprecation="true"
+         failOnRisky="true"
+         failOnEmptyTestSuite="true"
+         displayDetailsOnIncompleteTests="true"
+         displayDetailsOnSkippedTests="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+>
     <php>
         <ini name="intl.default_locale" value="en" />
         <ini name="date.timezone" value="UTC" />
@@ -23,9 +34,7 @@
         </testsuite>
     </testsuites>
     <extensions>
-        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
+        <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
+        <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension" />
     </extensions>
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-    </listeners>
 </phpunit>
