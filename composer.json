@@ -35,7 +35,7 @@
         "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
-        "phpunit/phpunit": "^12.5",
+        "phpunit/phpunit": "^11.5",
         "symfony/amazon-sqs-messenger": "^7.4",
         "symfony/beanstalkd-messenger": "^7.4",
         "symfony/phpunit-bridge": "^7.4",
