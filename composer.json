@@ -38,7 +38,6 @@
         "phpunit/phpunit": "^11.5",
         "symfony/amazon-sqs-messenger": "^7.4",
         "symfony/beanstalkd-messenger": "^7.4",
-        "symfony/phpunit-bridge": "^7.4",
         "symfony/redis-messenger": "^7.4"
     },
     "autoload": {
