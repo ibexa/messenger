@@ -3,6 +3,6 @@ CREATE TABLE ibexa_messenger_messages (id INTEGER PRIMARY KEY AUTOINCREMENT NOT 
 , delivered_at DATETIME DEFAULT NULL --(DC2Type:datetime_immutable)
 );
 -- ibexa:sql-statement-separator
-CREATE INDEX ibexa_messenger_messages_queue_available_delivered_idx ON ibexa_messenger_messages (queue_name, available_at, delivered_at, id);
+CREATE INDEX IDX_837A775AFB7336F0E3BD61CE16BA31DBBF396750 ON ibexa_messenger_messages (queue_name, available_at, delivered_at, id);
 -- ibexa:sql-statement-separator
 CREATE TABLE ibexa_messenger_lock_keys (key_id VARCHAR(64) NOT NULL, key_token VARCHAR(44) NOT NULL, key_expiration INTEGER UNSIGNED NOT NULL, PRIMARY KEY(key_id));

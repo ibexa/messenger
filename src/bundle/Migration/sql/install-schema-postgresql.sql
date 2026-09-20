@@ -1,6 +1,6 @@
 CREATE TABLE ibexa_messenger_messages (id BIGSERIAL NOT NULL, body TEXT NOT NULL, headers TEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, available_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, delivered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id));
 -- ibexa:sql-statement-separator
-CREATE INDEX ibexa_messenger_messages_queue_available_delivered_idx ON ibexa_messenger_messages (queue_name, available_at, delivered_at, id);
+CREATE INDEX IDX_837A775AFB7336F0E3BD61CE16BA31DBBF396750 ON ibexa_messenger_messages (queue_name, available_at, delivered_at, id);
 -- ibexa:sql-statement-separator
 COMMENT ON COLUMN ibexa_messenger_messages.created_at IS '(DC2Type:datetime_immutable)';
 -- ibexa:sql-statement-separator

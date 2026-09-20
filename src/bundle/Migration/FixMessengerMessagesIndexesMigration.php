@@ -48,7 +48,7 @@ final class FixMessengerMessagesIndexesMigration extends AbstractSqlMigration im
     {
         $this->abortIfUnsupportedPlatform(SqlPlatform::MYSQL, SqlPlatform::POSTGRESQL, SqlPlatform::SQLITE);
 
-        if ($schema->getTable('ibexa_messenger_messages')->hasIndex('ibexa_messenger_messages_queue_available_delivered_idx')) {
+        if ($schema->getTable('ibexa_messenger_messages')->hasIndex('IDX_837A775AFB7336F0E3BD61CE16BA31DBBF396750')) {
             return;
         }
 
