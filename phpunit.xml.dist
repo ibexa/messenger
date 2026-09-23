@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
         bootstrap="vendor/autoload.php"
         failOnWarning="true"
         failOnNotice="true"
-        failOnPhpunitNotice="true"
         colors="true"
+        failOnDeprecation="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
 >
     <testsuites>
         <testsuite name="bundle">
@@ -16,4 +17,11 @@
             <directory>tests/lib</directory>
         </testsuite>
     </testsuites>
+    <source baseline="phpunit.baseline.xml" ignoreIndirectDeprecations="false" ignoreSuppressionOfDeprecations="true">
+        <include>
+            <directory>src/bundle</directory>
+            <directory>src/contracts</directory>
+            <directory>src/lib</directory>
+        </include>
+    </source>
 </phpunit>
