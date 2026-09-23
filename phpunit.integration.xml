@@ -5,6 +5,7 @@
          beStrictAboutOutputDuringTests="true"
          failOnWarning="true"
          failOnNotice="true"
+         failOnDeprecation="true"
          failOnPhpunitDeprecation="true"
          failOnRisky="true"
          failOnEmptyTestSuite="true"
@@ -21,7 +22,6 @@
         <env name="KERNEL_CLASS" value="Ibexa\Tests\Integration\Messenger\DefaultTestKernel" />
         <env name="SEARCH_ENGINE" value="legacy" />
         <env name="DATABASE_URL" value="sqlite://i@i/var/test.db" />
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=4&amp;max[direct]=0&amp;verbose=0"/>
 
         <!-- Test-only environment variables -->
         <env name="TEST_IBEXA_MESSENGER_TRANSPORT_DSN" value="doctrine://default?table_name=ibexa_messenger_messages&amp;auto_setup=false" />
@@ -32,8 +32,14 @@
             <directory>tests/integration</directory>
         </testsuite>
     </testsuites>
+    <source baseline="phpunit.integration.baseline.xml" ignoreIndirectDeprecations="false" ignoreSuppressionOfDeprecations="true">
+        <include>
+            <directory>src/bundle</directory>
+            <directory>src/contracts</directory>
+            <directory>src/lib</directory>
+        </include>
+    </source>
     <extensions>
         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
-        <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension" />
     </extensions>
 </phpunit>
