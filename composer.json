@@ -9,15 +9,15 @@
         "php": ">=8.3",
         "ibexa/core": "~6.0.x-dev",
         "ibexa/core-persistence": "~6.0.x-dev",
-        "symfony/config": "^7.4",
-        "symfony/dependency-injection": "^7.4",
-        "symfony/doctrine-messenger": "^7.4",
-        "symfony/event-dispatcher": "^7.4",
-        "symfony/http-foundation": "^7.4",
-        "symfony/http-kernel": "^7.4",
-        "symfony/lock": "^7.4",
-        "symfony/messenger": "^7.4",
-        "symfony/yaml": "^7.4"
+        "symfony/config": "^7.4 || ^8.1",
+        "symfony/dependency-injection": "^7.4 || ^8.1",
+        "symfony/doctrine-messenger": "^7.4 || ^8.1",
+        "symfony/event-dispatcher": "^7.4 || ^8.1",
+        "symfony/http-foundation": "^7.4 || ^8.1",
+        "symfony/http-kernel": "^7.4 || ^8.1",
+        "symfony/lock": "^7.4.14 || ^8.1",
+        "symfony/messenger": "^7.4 || ^8.1",
+        "symfony/yaml": "^7.4 || ^8.1"
     },
     "require-dev": {
         "behat/behat": "^4.0@alpha",
@@ -36,9 +36,9 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^11.5",
-        "symfony/amazon-sqs-messenger": "^7.4",
-        "symfony/beanstalkd-messenger": "^7.4",
-        "symfony/redis-messenger": "^7.4"
+        "symfony/amazon-sqs-messenger": "^7.4 || ^8.1",
+        "symfony/beanstalkd-messenger": "^7.4 || ^8.1",
+        "symfony/redis-messenger": "^7.4 || ^8.1"
     },
     "autoload": {
         "psr-4": {
