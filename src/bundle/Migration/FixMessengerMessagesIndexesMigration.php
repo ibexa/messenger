@@ -12,7 +12,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Schema\Schema;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\AbstractSqlMigration;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\IbexaMigrationInterface;
-use Ibexa\DoctrineMigrations\Migration\SqlPlatform;
+use Ibexa\Contracts\DoctrineSchema\Database\DatabasePlatformName;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
 
 /**
@@ -46,7 +46,7 @@ final class FixMessengerMessagesIndexesMigration extends AbstractSqlMigration im
 
     public function up(Schema $schema): void
     {
-        $this->abortIfUnsupportedPlatform(SqlPlatform::MYSQL, SqlPlatform::POSTGRESQL, SqlPlatform::SQLITE);
+        $this->abortIfUnsupportedPlatform(DatabasePlatformName::MySQL, DatabasePlatformName::PostgreSQL, DatabasePlatformName::SQLite);
 
         if ($schema->getTable('ibexa_messenger_messages')->hasIndex('IDX_837A775AFB7336F0E3BD61CE16BA31DBBF396750')) {
             return;
