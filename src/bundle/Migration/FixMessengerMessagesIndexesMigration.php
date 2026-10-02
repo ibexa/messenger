@@ -12,7 +12,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Schema\Schema;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\AbstractSqlMigration;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\IbexaMigrationInterface;
-use Ibexa\Contracts\DoctrineSchema\Database\DatabasePlatformName;
+use Ibexa\Contracts\DoctrineMigrations\Migrations\SqlPlatform;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
 
 /**
@@ -46,13 +46,13 @@ final class FixMessengerMessagesIndexesMigration extends AbstractSqlMigration im
 
     public function up(Schema $schema): void
     {
-        $this->abortIfUnsupportedPlatform(DatabasePlatformName::MySQL, DatabasePlatformName::PostgreSQL, DatabasePlatformName::SQLite);
+        $this->abortIfUnsupportedPlatform(SqlPlatform::MYSQL, SqlPlatform::MARIADB, SqlPlatform::POSTGRESQL, SqlPlatform::SQLITE);
 
         if ($schema->getTable('ibexa_messenger_messages')->hasIndex('IDX_837A775AFB7336F0E3BD61CE16BA31DBBF396750')) {
             return;
         }
 
-        if ($this->isMySQL()) {
+        if ($this->isMySQL() || $this->isMariaDB()) {
             $this->addSqlFile(__DIR__ . '/sql/fix-messenger-messages-indexes-mysql.sql');
         } elseif ($this->isPostgreSQL()) {
             $this->addSqlFile(__DIR__ . '/sql/fix-messenger-messages-indexes-postgresql.sql');
