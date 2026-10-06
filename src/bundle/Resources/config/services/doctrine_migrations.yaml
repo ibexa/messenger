@@ -23,3 +23,11 @@ services:
             $connection: '@ibexa.persistence.connection'
         tags:
             - { name: !php/const Ibexa\Contracts\DoctrineMigrations\Migrations\IbexaMigrationTag::TAG }
+
+    Ibexa\Bundle\Messenger\Migration\ConvertPostgreSqlSerialColumnsToIdentityMigration:
+        autowire: true
+        public: false
+        arguments:
+            $connection: '@ibexa.persistence.connection'
+        tags:
+            - { name: !php/const Ibexa\Contracts\DoctrineMigrations\Migrations\IbexaMigrationTag::TAG }
