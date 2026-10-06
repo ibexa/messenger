@@ -39,7 +39,7 @@ final class SudoMiddlewareTest extends TestCase
 
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('handle')
             ->with(self::callback(static function (Envelope $envelope): bool {
                 self::assertNotNull($envelope->last(SudoStamp::class));
@@ -49,12 +49,12 @@ final class SudoMiddlewareTest extends TestCase
             ->willReturnArgument(0);
 
         $this->stack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('next')
             ->willReturn($nextMiddleware);
 
         $this->repository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('sudo')
             ->willReturnCallback(static function (callable $callback): Envelope {
                 $envelope = $callback();
@@ -75,7 +75,7 @@ final class SudoMiddlewareTest extends TestCase
 
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('handle')
             ->with(self::callback(static function (Envelope $envelope): bool {
                 self::assertNull($envelope->last(SudoStamp::class));
@@ -85,12 +85,12 @@ final class SudoMiddlewareTest extends TestCase
             ->willReturnArgument(0);
 
         $this->stack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('next')
             ->willReturn($nextMiddleware);
 
         $this->repository
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('sudo');
 
         $processedEnvelope = $this->middleware->handle($envelope, $this->stack);

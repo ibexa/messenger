@@ -53,7 +53,7 @@ final class UserPermissionMiddlewareTest extends TestCase
         // With a stamp the middleware reads the current reference once and the next middleware
         // reads it again; without a stamp only the next middleware reads it.
         $this->permissionResolver
-            ->expects(null !== $stamp ? self::exactly(2) : self::once())
+            ->expects(null !== $stamp ? $this->exactly(2) : $this->once())
             ->method('getCurrentUserReference')
             ->willReturnCallback(static function () use (&$currentUserReference): APIUserReference {
                 return $currentUserReference;
@@ -61,7 +61,7 @@ final class UserPermissionMiddlewareTest extends TestCase
         // With a stamp the reference is set to the stamp user and then restored in the finally block;
         // without a stamp it is never touched.
         $this->permissionResolver
-            ->expects(null !== $stamp ? self::exactly(2) : self::never())
+            ->expects(null !== $stamp ? $this->exactly(2) : $this->never())
             ->method('setCurrentUserReference')
             ->willReturnCallback(static function (APIUserReference $reference) use (&$currentUserReference): void {
                 $currentUserReference = $reference;
@@ -71,7 +71,7 @@ final class UserPermissionMiddlewareTest extends TestCase
         $userIdSeenByNext = null;
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(function (Envelope $envelope) use (&$userIdSeenByNext, $exception): Envelope {
                 $userIdSeenByNext = $this->permissionResolver->getCurrentUserReference()->getUserId();
@@ -83,7 +83,7 @@ final class UserPermissionMiddlewareTest extends TestCase
             });
 
         $this->stack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('next')
             ->willReturn($nextMiddleware);
 
