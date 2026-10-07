@@ -20,8 +20,12 @@ final class DoctrineDbalStore extends SymfonyDoctrineDbalStore
 {
     private Connection $connection;
 
-    public function __construct($connOrUrl, array $options = [], float $gcProbability = 0.01, int $initialTtl = 300)
-    {
+    public function __construct(
+        $connOrUrl,
+        array $options = [],
+        float $gcProbability = 0.01,
+        int $initialTtl = 300
+    ) {
         parent::__construct($connOrUrl, $options, $gcProbability, $initialTtl);
 
         $this->connection = Closure::bind(function (): Connection {

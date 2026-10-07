@@ -31,8 +31,10 @@ final class SiteAccessMiddleware implements MiddlewareInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function handle(Envelope $envelope, StackInterface $stack): Envelope
-    {
+    public function handle(
+        Envelope $envelope,
+        StackInterface $stack
+    ): Envelope {
         $stamp = $envelope->last(SiteAccessStamp::class);
         if ($stamp !== null) {
             $siteAccess = $this->siteAccessService->get($stamp->siteAccess);

@@ -13,6 +13,7 @@ use Ibexa\Contracts\Messenger\Transport\MessageProviderInterface;
 use Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub\SampleMessage;
 use Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub\SampleMessageInterface;
 use Ibexa\Tests\Bundle\Messenger\Transport\Sender\Stub\SampleMessageParent;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
@@ -21,10 +22,10 @@ use Traversable;
 
 final class SendersLocatorTest extends TestCase
 {
-    /** @var \Symfony\Component\Messenger\Transport\Sender\SenderInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var SenderInterface&MockObject */
     private SenderInterface $senderMock;
 
-    /** @var \Ibexa\Contracts\Messenger\Transport\MessageProviderInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var MessageProviderInterface&MockObject */
     private MessageProviderInterface $messageProviderMock;
 
     protected function setUp(): void

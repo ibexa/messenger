@@ -12,11 +12,11 @@ use Ibexa\Contracts\Messenger\Transport\MessageProviderInterface;
 
 final class MessageProviderRegistry implements MessageProviderInterface
 {
-    /** @var iterable<\Ibexa\Contracts\Messenger\Transport\MessageProviderInterface> */
+    /** @var iterable<MessageProviderInterface> */
     private iterable $providers;
 
     /**
-     * @param iterable<\Ibexa\Contracts\Messenger\Transport\MessageProviderInterface> $providers
+     * @param iterable<MessageProviderInterface> $providers
      */
     public function __construct(
         iterable $providers

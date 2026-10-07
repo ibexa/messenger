@@ -8,6 +8,4 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\Integration\Messenger\Stubs;
 
-final class FooMessage
-{
-}
+final class FooMessage {}
