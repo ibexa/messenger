@@ -9,6 +9,7 @@
         "php": ">=8.5",
         "ibexa/core": "~6.0.x-dev",
         "ibexa/core-persistence": "~6.0.x-dev",
+        "ibexa/doctrine-migrations": "~6.0.x-dev",
         "symfony/config": "^8.1",
         "symfony/dependency-injection": "^8.1",
         "symfony/doctrine-messenger": "^8.1",

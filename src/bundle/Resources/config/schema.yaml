@@ -1,5 +1,7 @@
 tables:
     ibexa_messenger_messages:
+        indexes:
+            ibexa_messenger_messages_queue_available_delivered_idx: { fields: [ queue_name, available_at, delivered_at, id ] }
         id:
             id:
                 type: bigint
@@ -20,18 +22,12 @@ tables:
             created_at:
                 type: datetime_immutable
                 nullable: false
-                index:
-                    name: ibexa_messenger_created_at_idx
             available_at:
                 type: datetime_immutable
                 nullable: false
-                index:
-                    name: ibexa_messenger_available_at_idx
             delivered_at:
                 type: datetime_immutable
                 nullable: true
-                index:
-                    name: ibexa_messenger_delivered_at_idx
 
     ibexa_messenger_lock_keys:
         id:
