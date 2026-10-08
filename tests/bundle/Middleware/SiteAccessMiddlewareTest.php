@@ -49,13 +49,13 @@ final class SiteAccessMiddlewareTest extends TestCase
         $siteAccess = new SiteAccess('my_site');
 
         $this->siteAccessService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('get')
             ->with('my_site')
             ->willReturn($siteAccess);
 
         $this->eventDispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(
                 self::callback(static function (ScopeChangeEvent $event) use ($siteAccess): bool {
@@ -68,12 +68,12 @@ final class SiteAccessMiddlewareTest extends TestCase
 
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('handle')
             ->willReturnArgument(0);
 
         $this->stack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('next')
             ->willReturn($nextMiddleware);
 
@@ -85,21 +85,21 @@ final class SiteAccessMiddlewareTest extends TestCase
         $envelope = new Envelope(new \stdClass());
 
         $this->siteAccessService
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('get');
 
         $this->eventDispatcher
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('dispatch');
 
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('handle')
             ->willReturnArgument(0);
 
         $this->stack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('next')
             ->willReturn($nextMiddleware);
 

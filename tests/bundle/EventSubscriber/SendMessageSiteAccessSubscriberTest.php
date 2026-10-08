@@ -31,7 +31,7 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
 
     public function testGetSubscribedEvents(): void
     {
-        $this->siteAccessService->expects(self::never())->method(self::anything());
+        $this->siteAccessService->expects($this->never())->method(self::anything());
 
         $subscribedEvents = SendMessageSiteAccessSubscriber::getSubscribedEvents();
 
@@ -46,7 +46,7 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
         $event = new SendMessageToTransportsEvent($envelope, []);
 
         $this->siteAccessService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrent')
             ->willReturn($siteAccess);
 
@@ -65,7 +65,7 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
         $event = new SendMessageToTransportsEvent($envelope, []);
 
         $this->siteAccessService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrent')
             ->willReturn(null);
 
@@ -84,7 +84,7 @@ final class SendMessageSiteAccessSubscriberTest extends TestCase
         $event = new SendMessageToTransportsEvent($envelope, []);
 
         $this->siteAccessService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrent')
             ->willReturn($siteAccess);
 

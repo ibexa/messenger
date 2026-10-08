@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Ibexa\Bundle\Messenger\DependencyInjection;
 
-use Ibexa\Bundle\Messenger\EventListener\ReleaseDeduplicationLockOnFailureListener;
 use Ibexa\Bundle\Messenger\Middleware\SiteAccessMiddleware;
 use Ibexa\Bundle\Messenger\Middleware\SudoMiddleware;
 use Ibexa\Bundle\Messenger\Middleware\UserPermissionMiddleware;
@@ -23,6 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Lock\PersistingStoreInterface;
 use Symfony\Component\Lock\Store\StoreFactory;
+use Symfony\Component\Messenger\EventListener\ReleaseDeduplicationLockOnFailureListener;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -204,17 +204,10 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
     private function registerDeduplicationFailureListener(ContainerBuilder $container): void
     {
         // Release the deduplication lock when a message definitively fails, so a new dispatch of
-        // the same key is not blocked until the lock's TTL expires. Prefer Symfony's native listener
-        // (available since Symfony 8.1); fall back to our backport otherwise. Either way it must be
-        // wired to our lock factory, because Symfony's own native listener uses the default
-        // "lock.factory" and would not release locks stored in the "ibexa_messenger_lock_keys" table.
-        // @todo Remove the backport class and this fallback once the minimum Symfony version is >= 8.1.
-        $nativeListenerClass = 'Symfony\Component\Messenger\EventListener\ReleaseDeduplicationLockOnFailureListener';
-        $listenerClass = class_exists($nativeListenerClass)
-            ? $nativeListenerClass
-            : ReleaseDeduplicationLockOnFailureListener::class;
-
-        $definition = new Definition($listenerClass);
+        // the same key is not blocked until the lock's TTL expires. It must be wired to our lock factory,
+        // because Symfony's listener by default uses "lock.factory" and would not release locks stored
+        // in the "ibexa_messenger_lock_keys" table.
+        $definition = new Definition(ReleaseDeduplicationLockOnFailureListener::class);
         $definition->setArgument(0, new Reference('ibexa.messenger.lock_factory'));
         $definition->addTag('kernel.event_subscriber');
         $container->setDefinition(

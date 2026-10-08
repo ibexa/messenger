@@ -39,13 +39,13 @@ final class SendersLocatorTest extends TestCase
         $innerSendersLocatorMock = $this->createMock(SendersLocatorInterface::class);
         $innerSender = self::createStub(SenderInterface::class);
         $innerSendersLocatorMock
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getSenders')
             ->with(self::identicalTo($envelope))
             ->willReturn(new \ArrayIterator(['inner.sender' => $innerSender]));
 
         $this->messageProviderMock
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getHandledClasses')
             ->willReturn(['stdClass']);
 
@@ -64,7 +64,7 @@ final class SendersLocatorTest extends TestCase
     {
         $envelope = new Envelope(new \stdClass());
         $this->messageProviderMock
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getHandledClasses')
             ->willReturn(['stdClass']);
 
@@ -82,7 +82,7 @@ final class SendersLocatorTest extends TestCase
     {
         $envelope = new Envelope(new \stdClass());
         $this->messageProviderMock
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getHandledClasses')
             ->willReturn(['AnotherClass']);
 
@@ -117,7 +117,7 @@ final class SendersLocatorTest extends TestCase
         };
 
         $this->messageProviderMock
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getHandledClasses')
             ->willReturn($generator());
 
@@ -134,7 +134,7 @@ final class SendersLocatorTest extends TestCase
     private function assertMessageIsHandled(Envelope $envelope): void
     {
         $this->messageProviderMock
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getHandledClasses')
             ->willReturn([
                 SampleMessage::class,
