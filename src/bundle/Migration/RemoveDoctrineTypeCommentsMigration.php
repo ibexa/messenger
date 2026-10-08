@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\Messenger\Migration;
 
 use DateTimeImmutable;
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Schema\Schema;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\AbstractSqlMigration;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\IbexaMigrationInterface;
@@ -25,14 +24,11 @@ use Ibexa\Contracts\DoctrineMigrations\Migrations\SqlPlatform;
  * 5.0 keeps them. MySQL and MariaDB change a column's comment only with the rest of its definition,
  * so the statements give each column its 6.0 definition again; PostgreSQL drops the comment.
  * SQLite, used only for tests, would need the table rebuilt, so it keeps them. The statements are
- * in sql/remove-doctrine-type-comments-*.sql.
+ * in sql/remove-doctrine-type-comments-*.sql. Running them on columns that have no comment changes
+ * nothing, so there's no check first.
  */
 final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration implements IbexaMigrationInterface
 {
-    private const TABLES = [
-        'ibexa_messenger_messages',
-    ];
-
     public function getDescription(): string
     {
         return 'Removes the Doctrine type comments from the messenger columns';
@@ -52,7 +48,7 @@ final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration imp
     {
         $this->abortIfUnsupportedPlatform(SqlPlatform::MYSQL, SqlPlatform::MARIADB, SqlPlatform::POSTGRESQL, SqlPlatform::SQLITE);
 
-        if ($this->isSqlite() || !$this->hasTypeComments()) {
+        if ($this->isSqlite()) {
             return;
         }
 
@@ -63,16 +59,5 @@ final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration imp
         } elseif ($this->isPostgreSQL()) {
             $this->addSqlFile(__DIR__ . '/sql/remove-doctrine-type-comments-postgresql.sql');
         }
-    }
-
-    private function hasTypeComments(): bool
-    {
-        $sql = $this->isPostgreSQL()
-            ? 'SELECT 1 FROM pg_description d JOIN pg_class c ON c.oid = d.objoid'
-                . " WHERE c.relnamespace = current_schema()::regnamespace AND c.relname IN (?) AND d.description LIKE '(DC2Type:%'"
-            : 'SELECT 1 FROM information_schema.COLUMNS'
-                . " WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN (?) AND COLUMN_COMMENT LIKE '(DC2Type:%'";
-
-        return $this->connection->fetchOne($sql, [self::TABLES], [ArrayParameterType::STRING]) !== false;
     }
 }
