@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\Messenger\Transport\Sender;
 
 use Ibexa\Contracts\Messenger\Transport\MessageProviderInterface;
-use function Ibexa\PolyfillPhp82\iterator_to_array;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface;
+
+use function Ibexa\PolyfillPhp82\iterator_to_array;
 
 final class SendersLocator implements SendersLocatorInterface
 {

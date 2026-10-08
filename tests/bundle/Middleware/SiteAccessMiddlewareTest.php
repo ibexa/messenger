@@ -14,6 +14,7 @@ use Ibexa\Core\MVC\Symfony\Event\ScopeChangeEvent;
 use Ibexa\Core\MVC\Symfony\MVCEvents;
 use Ibexa\Core\MVC\Symfony\SiteAccess;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
@@ -22,13 +23,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class SiteAccessMiddlewareTest extends TestCase
 {
-    /** @var \Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var SiteAccessServiceInterface&MockObject */
     private SiteAccessServiceInterface $siteAccessService;
 
-    /** @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var EventDispatcherInterface&MockObject */
     private EventDispatcherInterface $eventDispatcher;
 
-    /** @var \Symfony\Component\Messenger\Middleware\StackInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var StackInterface&MockObject */
     private StackInterface $stack;
 
     private SiteAccessMiddleware $middleware;

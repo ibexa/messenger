@@ -28,8 +28,11 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
     /**
      * @return array<string, mixed>
      */
-    public function normalize($data, ?string $format = null, array $context = []): array
-    {
+    public function normalize(
+        $data,
+        ?string $format = null,
+        array $context = []
+    ): array {
         assert($data instanceof Key);
 
         /** @var array<string, mixed> */
@@ -40,16 +43,22 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
         ), $data, Key::class)();
     }
 
-    public function supportsNormalization($data, ?string $format = null): bool
-    {
+    public function supportsNormalization(
+        $data,
+        ?string $format = null
+    ): bool {
         return $data instanceof Key;
     }
 
     /**
      * @throws \ReflectionException
      */
-    public function denormalize($data, string $type, ?string $format = null, array $context = []): Key
-    {
+    public function denormalize(
+        $data,
+        string $type,
+        ?string $format = null,
+        array $context = []
+    ): Key {
         $key = (new ReflectionClass(Key::class))->newInstanceWithoutConstructor();
         $setter = Closure::bind(
             function (string $field) use ($data): void {
@@ -65,8 +74,11 @@ final class LockKeyNormalizer implements NormalizerInterface, DenormalizerInterf
         return $key;
     }
 
-    public function supportsDenormalization($data, string $type, ?string $format = null): bool
-    {
+    public function supportsDenormalization(
+        $data,
+        string $type,
+        ?string $format = null
+    ): bool {
         return $type === Key::class;
     }
 }

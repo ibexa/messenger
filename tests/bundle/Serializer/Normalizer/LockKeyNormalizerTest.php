@@ -30,8 +30,10 @@ final class LockKeyNormalizerTest extends TestCase
      *     state: array<string, mixed>,
      * } $expected
      */
-    public function testNormalize(Key $data, array $expected): void
-    {
+    public function testNormalize(
+        Key $data,
+        array $expected
+    ): void {
         $normalized = $this->normalizer->normalize($data);
 
         self::assertSame($expected, $normalized);
@@ -46,8 +48,10 @@ final class LockKeyNormalizerTest extends TestCase
      *     state: array<string, mixed>,
      * } $data
      */
-    public function testDenormalize(Key $expectedKey, array $data): void
-    {
+    public function testDenormalize(
+        Key $expectedKey,
+        array $data
+    ): void {
         $denormalized = $this->normalizer->denormalize($data, Key::class);
 
         self::assertSame($data['resource'], (string)$denormalized);
@@ -69,7 +73,7 @@ final class LockKeyNormalizerTest extends TestCase
 
     /**
      * @return iterable<array{
-     *     \Symfony\Component\Lock\Key,
+     *     Key,
      *     array{
      *         resource: string,
      *         expiringTime: float|null,
