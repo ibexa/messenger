@@ -23,6 +23,7 @@
         "dama/doctrine-test-bundle": "^6.7",
         "ibexa/behat": "~4.6.x-dev",
         "ibexa/code-style": "~2.3.1",
+        "ibexa/doctrine-migrations": "~4.6.x-dev",
         "ibexa/doctrine-schema": "~4.6.x-dev",
         "ibexa/phpstan": "~4.6.x-dev",
         "ibexa/test-core": "~4.6.x-dev",
