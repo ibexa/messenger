@@ -24,11 +24,16 @@ use Ibexa\Contracts\DoctrineMigrations\Migrations\SqlPlatform;
  * 5.0 keeps them. MySQL and MariaDB change a column's comment only with the rest of its definition,
  * so the statements give each column its 6.0 definition again; PostgreSQL drops the comment.
  * SQLite, used only for tests, would need the table rebuilt, so it keeps them. The statements are
- * in sql/remove-doctrine-type-comments-*.sql. Running them on columns that have no comment changes
- * nothing, so there's no check first.
+ * in sql/remove-doctrine-type-comments-*.sql. They're skipped when none of the columns has a type
+ * comment, as on a database a 6.0 SchemaBuilderEvent install created.
  */
 final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration implements IbexaMigrationInterface
 {
+    /** The tables whose columns sql/remove-doctrine-type-comments-*.sql changes. */
+    private const TABLES = [
+        'ibexa_messenger_messages',
+    ];
+
     public function getDescription(): string
     {
         return 'Removes the Doctrine type comments from the messenger columns';
@@ -52,6 +57,10 @@ final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration imp
             return;
         }
 
+        if (!$this->hasTypeComments($schema)) {
+            return;
+        }
+
         if ($this->isMariaDB()) {
             $this->addSqlFile(__DIR__ . '/sql/remove-doctrine-type-comments-mariadb.sql');
         } elseif ($this->isMySQL()) {
@@ -59,5 +68,18 @@ final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration imp
         } elseif ($this->isPostgreSQL()) {
             $this->addSqlFile(__DIR__ . '/sql/remove-doctrine-type-comments-postgresql.sql');
         }
+    }
+
+    private function hasTypeComments(Schema $schema): bool
+    {
+        foreach (self::TABLES as $tableName) {
+            foreach ($schema->getTable($tableName)->getColumns() as $column) {
+                if (str_starts_with($column->getComment(), '(DC2Type:')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
