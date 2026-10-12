@@ -17,6 +17,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
@@ -57,6 +58,12 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
         );
 
         $loader->load('services.yaml');
+
+        $phpLoader = new PhpFileLoader(
+            $container,
+            new FileLocator(__DIR__ . '/../Resources/config')
+        );
+        $phpLoader->load('services/doctrine_migrations.php');
 
         $this->configureLockStorage($mergedConfig['deduplication_lock_storage'], $container);
         $this->registerMessengerConfiguration($mergedConfig, $container);
