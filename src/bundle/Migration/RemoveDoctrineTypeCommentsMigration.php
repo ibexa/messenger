@@ -30,7 +30,7 @@ use Ibexa\Contracts\DoctrineMigrations\Migrations\SqlPlatform;
 final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration implements IbexaMigrationInterface
 {
     /** The tables whose columns sql/remove-doctrine-type-comments-*.sql changes. */
-    private const TABLES = [
+    private const array TABLES = [
         'ibexa_messenger_messages',
     ];
 
