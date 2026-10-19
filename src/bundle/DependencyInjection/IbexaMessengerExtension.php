@@ -41,8 +41,10 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
     /**
      * @phpstan-param TConfig&array<mixed> $mergedConfig
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
-    {
+    protected function loadInternal(
+        array $mergedConfig,
+        ContainerBuilder $container
+    ): void {
         $container->registerForAutoconfiguration(MessageProviderInterface::class)
             ->addTag('ibexa.messenger.sender_message_provider');
 
@@ -143,8 +145,10 @@ final class IbexaMessengerExtension extends ConfigurableExtension implements Pre
     /**
      * @param TDeduplicationLockStorageConfig $lockStorageConfig
      */
-    private function configureLockStorage(array $lockStorageConfig, ContainerBuilder $container): void
-    {
+    private function configureLockStorage(
+        array $lockStorageConfig,
+        ContainerBuilder $container
+    ): void {
         if ($lockStorageConfig['enabled'] === false) {
             $container->removeDefinition(DeduplicateMiddleware::class);
             $container->removeDefinition('ibexa.messenger.lock_factory');

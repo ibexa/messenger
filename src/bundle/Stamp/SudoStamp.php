@@ -10,6 +10,4 @@ namespace Ibexa\Bundle\Messenger\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
-final class SudoStamp implements StampInterface
-{
-}
+final class SudoStamp implements StampInterface {}

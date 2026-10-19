@@ -29,8 +29,10 @@ final class DeduplicateMiddleware implements MiddlewareInterface
         $this->lockFactory = $lockFactory;
     }
 
-    public function handle(Envelope $envelope, StackInterface $stack): Envelope
-    {
+    public function handle(
+        Envelope $envelope,
+        StackInterface $stack
+    ): Envelope {
         $deduplicateStamp = $envelope->last(DeduplicateStamp::class);
         if ($deduplicateStamp === null) {
             return $stack->next()->handle($envelope, $stack);

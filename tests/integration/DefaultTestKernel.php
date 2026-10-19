@@ -8,6 +8,4 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\Integration\Messenger;
 
-final class DefaultTestKernel extends AbstractTestKernel
-{
-}
+final class DefaultTestKernel extends AbstractTestKernel {}

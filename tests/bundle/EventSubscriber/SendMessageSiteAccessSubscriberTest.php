@@ -12,13 +12,14 @@ use Ibexa\Bundle\Messenger\EventSubscriber\SendMessageSiteAccessSubscriber;
 use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
 use Ibexa\Core\MVC\Symfony\SiteAccess;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 
 final class SendMessageSiteAccessSubscriberTest extends TestCase
 {
-    /** @var \Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var SiteAccessServiceInterface&MockObject */
     private SiteAccessServiceInterface $siteAccessService;
 
     private SendMessageSiteAccessSubscriber $subscriber;
