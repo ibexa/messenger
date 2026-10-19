@@ -13,8 +13,6 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface;
 
-use function Ibexa\PolyfillPhp82\iterator_to_array;
-
 final class SendersLocator implements SendersLocatorInterface
 {
     private SenderInterface $sender;
