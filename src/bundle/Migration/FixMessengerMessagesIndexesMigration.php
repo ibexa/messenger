@@ -48,7 +48,15 @@ final class FixMessengerMessagesIndexesMigration extends AbstractSqlMigration im
     {
         $this->abortIfUnsupportedPlatform(SqlPlatform::MYSQL, SqlPlatform::MARIADB, SqlPlatform::POSTGRESQL, SqlPlatform::SQLITE);
 
-        if ($schema->getTable('ibexa_messenger_messages')->hasIndex('IDX_837A775AFB7336F0E3BD61CE16BA31DBBF396750')) {
+        // The table is missing only in a dry run, which doesn't execute the migrations before this one
+        if (!$schema->hasTable('ibexa_messenger_messages')) {
+            return;
+        }
+
+        // Only a table created from the original schema has the per-column indexes to replace
+        $table = $schema->getTable('ibexa_messenger_messages');
+        if (!$table->hasIndex('ibexa_messenger_created_at_idx')
+            || $table->hasIndex('IDX_837A775AFB7336F0E3BD61CE16BA31DBBF396750')) {
             return;
         }
 
