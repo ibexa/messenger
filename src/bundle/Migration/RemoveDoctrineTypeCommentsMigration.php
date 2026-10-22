@@ -57,6 +57,13 @@ final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration imp
             return;
         }
 
+        foreach (self::TABLES as $tableName) {
+            $this->skipIf(
+                !$schema->hasTable($tableName),
+                sprintf('%s doesn\'t exist yet: the migrations creating it don\'t execute in a dry run.', $tableName)
+            );
+        }
+
         if (!$this->hasTypeComments($schema)) {
             return;
         }
@@ -73,11 +80,6 @@ final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration imp
     private function hasTypeComments(Schema $schema): bool
     {
         foreach (self::TABLES as $tableName) {
-            // The table is missing only in a dry run, which doesn't execute the migrations before this one
-            if (!$schema->hasTable($tableName)) {
-                continue;
-            }
-
             foreach ($schema->getTable($tableName)->getColumns() as $column) {
                 if (str_starts_with($column->getComment(), '(DC2Type:')) {
                     return true;
