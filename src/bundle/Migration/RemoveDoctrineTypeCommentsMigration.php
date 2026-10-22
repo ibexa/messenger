@@ -57,6 +57,13 @@ final class RemoveDoctrineTypeCommentsMigration extends AbstractSqlMigration imp
             return;
         }
 
+        foreach (self::TABLES as $tableName) {
+            $this->skipIf(
+                !$schema->hasTable($tableName),
+                sprintf('%s doesn\'t exist yet: the migrations creating it don\'t execute in a dry run.', $tableName)
+            );
+        }
+
         if (!$this->hasTypeComments($schema)) {
             return;
         }
