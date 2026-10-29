@@ -14,9 +14,11 @@ use Ibexa\Bundle\Messenger\IbexaMessengerBundle;
 use Ibexa\Bundle\Test\Core\IbexaTestCoreBundle;
 use Ibexa\Contracts\Test\Core\IbexaTestKernel;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
+use Ibexa\Tests\Integration\Messenger\Stubs\FailingOnceMessageHandler;
 use Ibexa\Tests\Integration\Messenger\Stubs\FooMessageHandler;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 abstract class AbstractTestKernel extends IbexaTestKernel
@@ -46,6 +48,7 @@ abstract class AbstractTestKernel extends IbexaTestKernel
         yield from parent::getExposedServicesByClass();
 
         yield FooMessageHandler::class;
+        yield FailingOnceMessageHandler::class;
         yield SiteAccessServiceInterface::class;
     }
 
@@ -55,5 +58,7 @@ abstract class AbstractTestKernel extends IbexaTestKernel
 
         yield 'ibexa.messenger.bus' => MessageBusInterface::class;
         yield 'ibexa.messenger.transport' => TransportInterface::class;
+        yield 'ibexa.messenger.serializer' => SerializerInterface::class;
+        yield 'messenger.transport.ibexa_serializer_with_retries' => TransportInterface::class;
     }
 }
