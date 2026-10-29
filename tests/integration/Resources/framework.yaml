@@ -3,3 +3,13 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        messenger:
+            transports:
+                # A transport with a retry strategy, using the Ibexa serializer: a retried message is encoded
+                # with the ErrorDetailsStamp of the failure and has to be decoded again.
+                ibexa_serializer_with_retries:
+                    dsn: 'in-memory://?serialize=true'
+                    serializer: ibexa.messenger.serializer
+                    retry_strategy:
+                        max_retries: 1
+                        delay: 0

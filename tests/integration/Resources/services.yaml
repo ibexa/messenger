@@ -10,3 +10,8 @@ when@test:
             tags:
                 -   name: messenger.message_handler
                     bus: ibexa.messenger.bus
+
+        Ibexa\Tests\Integration\Messenger\Stubs\FailingOnceMessageHandler:
+            tags:
+                -   name: messenger.message_handler
+                    bus: ibexa.messenger.bus
