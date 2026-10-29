@@ -9,6 +9,11 @@ services:
         tags:
             - { name: ibexa.messenger.serializer.normalizer, priority: -60 }
 
+    ibexa.messenger.serializer.normalizer.flatten_exception_normalizer:
+        class: Symfony\Component\Messenger\Transport\Serialization\Normalizer\FlattenExceptionNormalizer
+        tags:
+            - { name: ibexa.messenger.serializer.normalizer, priority: -60 }
+
     ibexa.messenger.serializer.normalizer.array_denormalizer:
         class: Symfony\Component\Serializer\Normalizer\ArrayDenormalizer
         tags:
