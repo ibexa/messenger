@@ -10,6 +10,7 @@
         "doctrine/persistence": "^3",
         "ibexa/core": "~4.6.x-dev",
         "ibexa/core-persistence": "~4.6.x-dev",
+        "ibexa/doctrine-migrations": "~4.6.x-dev",
         "ibexa/polyfill-php82": "^1.0",
         "symfony/config": "^5.4",
         "symfony/dependency-injection": "^5.4",
