@@ -10,9 +10,9 @@ namespace Ibexa\Bundle\Messenger\Migration;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Schema\Schema;
-use Ibexa\Contracts\DoctrineMigrations\Migrations\AbstractSqlMigration;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\IbexaMigrationInterface;
 use Ibexa\Contracts\DoctrineMigrations\Migrations\SqlPlatform;
+use Ibexa\InternalContracts\DoctrineMigrations\Migrations\AbstractSqlMigration;
 
 /**
  * Removes the Doctrine type comments, such as "(DC2Type:datetime_immutable)" on
