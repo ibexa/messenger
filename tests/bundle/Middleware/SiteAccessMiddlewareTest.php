@@ -23,7 +23,6 @@ use RuntimeException;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
@@ -122,19 +121,22 @@ final class SiteAccessMiddlewareTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{bool}>
+     * @return iterable<string, array{bool, bool}>
      */
     public static function providerForTestNextMessageRunsInPreviousSiteAccess(): iterable
     {
-        yield 'first handler succeeds' => [false];
-        yield 'first handler throws' => [true];
+        yield 'first handler succeeds' => [false, false];
+        yield 'first handler throws' => [true, false];
+        yield 'scope change listener throws' => [false, true];
     }
 
     /**
      * @dataProvider providerForTestNextMessageRunsInPreviousSiteAccess
      */
-    public function testNextMessageRunsInPreviousSiteAccess(bool $firstHandlerThrows): void
-    {
+    public function testNextMessageRunsInPreviousSiteAccess(
+        bool $firstHandlerThrows,
+        bool $scopeChangeListenerThrows
+    ): void {
         $original = new SiteAccess('original');
         $stamped = new SiteAccess('stamped');
 
@@ -147,6 +149,12 @@ final class SiteAccessMiddlewareTest extends TestCase
 
         $eventDispatcher = new EventDispatcher();
         $eventDispatcher->addSubscriber($siteAccessService);
+        if ($scopeChangeListenerThrows) {
+            // runs after SiteAccessService has already switched
+            $eventDispatcher->addListener(MVCEvents::CONFIG_SCOPE_CHANGE, static function (): void {
+                throw new RuntimeException('Scope change listener failed');
+            }, -10);
+        }
 
         $handledIn = [];
         $handler = static function () use ($siteAccessService, $firstHandlerThrows, &$handledIn): void {
@@ -163,13 +171,13 @@ final class SiteAccessMiddlewareTest extends TestCase
 
         try {
             $bus->dispatch(new Envelope(new stdClass(), [new SiteAccessStamp('stamped')]));
-            self::assertFalse($firstHandlerThrows);
-        } catch (HandlerFailedException $e) {
-            self::assertTrue($firstHandlerThrows);
+            self::assertFalse($firstHandlerThrows || $scopeChangeListenerThrows);
+        } catch (RuntimeException $e) {
+            self::assertTrue($firstHandlerThrows || $scopeChangeListenerThrows);
         }
 
         $bus->dispatch(new Envelope(new stdClass()));
 
-        self::assertSame([$stamped, $original], $handledIn);
+        self::assertSame($scopeChangeListenerThrows ? [$original] : [$stamped, $original], $handledIn);
     }
 }

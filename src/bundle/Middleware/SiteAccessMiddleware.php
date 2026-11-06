@@ -42,9 +42,11 @@ final class SiteAccessMiddleware implements MiddlewareInterface
 
         $previousSiteAccess = $this->siteAccessService->getCurrent();
         $siteAccess = $this->siteAccessService->get($stamp->siteAccess);
-        $this->eventDispatcher->dispatch(new ScopeChangeEvent($siteAccess), MVCEvents::CONFIG_SCOPE_CHANGE);
 
         try {
+            // inside the try, a throwing listener may leave the scope partly switched
+            $this->eventDispatcher->dispatch(new ScopeChangeEvent($siteAccess), MVCEvents::CONFIG_SCOPE_CHANGE);
+
             return $stack->next()->handle($envelope, $stack);
         } finally {
             // the consumer is long-lived, the next message must not inherit this scope
