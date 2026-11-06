@@ -180,4 +180,50 @@ final class SiteAccessMiddlewareTest extends TestCase
 
         self::assertSame($scopeChangeListenerThrows ? [$original] : [$stamped, $original], $handledIn);
     }
+
+    /**
+     * @return iterable<string, array{bool, string}>
+     */
+    public static function providerForTestRestoreFailure(): iterable
+    {
+        yield 'handler failure is kept' => [true, 'Handler failed'];
+        yield 'restore failure is thrown when handler succeeded' => [false, 'Restore failed'];
+    }
+
+    /**
+     * @dataProvider providerForTestRestoreFailure
+     */
+    public function testRestoreFailure(
+        bool $handlerThrows,
+        string $expectedMessage
+    ): void {
+        $provider = $this->createStub(SiteAccessProviderInterface::class);
+        $provider->method('isDefined')->willReturn(true);
+        $provider->method('getSiteAccess')->willReturn(new SiteAccess('stamped'));
+
+        $siteAccessService = new SiteAccessService($provider, $this->createStub(ConfigResolverInterface::class));
+        $siteAccessService->setSiteAccess(new SiteAccess('original'));
+
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addSubscriber($siteAccessService);
+        $eventDispatcher->addListener(MVCEvents::CONFIG_SCOPE_RESTORE, static function (): void {
+            throw new RuntimeException('Restore failed');
+        });
+
+        $handler = static function () use ($handlerThrows): void {
+            if ($handlerThrows) {
+                throw new RuntimeException('Handler failed');
+            }
+        };
+
+        $bus = new MessageBus([
+            new SiteAccessMiddleware($siteAccessService, $eventDispatcher),
+            new HandleMessageMiddleware(new HandlersLocator([stdClass::class => [$handler]])),
+        ]);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $bus->dispatch(new Envelope(new stdClass(), [new SiteAccessStamp('stamped')]));
+    }
 }
