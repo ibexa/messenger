@@ -9,14 +9,24 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Bundle\Messenger\Middleware;
 
 use Ibexa\Bundle\Messenger\Middleware\SiteAccessMiddleware;
+use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
 use Ibexa\Core\MVC\Symfony\Event\ScopeChangeEvent;
 use Ibexa\Core\MVC\Symfony\MVCEvents;
 use Ibexa\Core\MVC\Symfony\SiteAccess;
+use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessProviderInterface;
+use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessService;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use stdClass;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\Handler\HandlersLocator;
+use Symfony\Component\Messenger\MessageBus;
+use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -48,7 +58,7 @@ final class SiteAccessMiddlewareTest extends TestCase
     public function testHandleDispatchesScopeChangeWhenSiteAccessStampExists(): void
     {
         $stamp = new SiteAccessStamp('my_site');
-        $envelope = new Envelope(new \stdClass(), [$stamp]);
+        $envelope = new Envelope(new stdClass(), [$stamp]);
         $siteAccess = new SiteAccess('my_site');
 
         $this->siteAccessService
@@ -85,7 +95,7 @@ final class SiteAccessMiddlewareTest extends TestCase
 
     public function testHandleDoesNotDispatchScopeChangeWhenNoSiteAccessStamp(): void
     {
-        $envelope = new Envelope(new \stdClass());
+        $envelope = new Envelope(new stdClass());
 
         $this->siteAccessService
             ->expects(self::never())
@@ -109,5 +119,57 @@ final class SiteAccessMiddlewareTest extends TestCase
         $result = $this->middleware->handle($envelope, $this->stack);
 
         self::assertSame($envelope->getMessage(), $result->getMessage());
+    }
+
+    /**
+     * @return iterable<string, array{bool}>
+     */
+    public static function providerForTestNextMessageRunsInPreviousSiteAccess(): iterable
+    {
+        yield 'first handler succeeds' => [false];
+        yield 'first handler throws' => [true];
+    }
+
+    /**
+     * @dataProvider providerForTestNextMessageRunsInPreviousSiteAccess
+     */
+    public function testNextMessageRunsInPreviousSiteAccess(bool $firstHandlerThrows): void
+    {
+        $original = new SiteAccess('original');
+        $stamped = new SiteAccess('stamped');
+
+        $provider = $this->createStub(SiteAccessProviderInterface::class);
+        $provider->method('isDefined')->willReturn(true);
+        $provider->method('getSiteAccess')->willReturnMap([['stamped', $stamped]]);
+
+        $siteAccessService = new SiteAccessService($provider, $this->createStub(ConfigResolverInterface::class));
+        $siteAccessService->setSiteAccess($original);
+
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addSubscriber($siteAccessService);
+
+        $handledIn = [];
+        $handler = static function () use ($siteAccessService, $firstHandlerThrows, &$handledIn): void {
+            $handledIn[] = $siteAccessService->getCurrent();
+            if ($firstHandlerThrows && count($handledIn) === 1) {
+                throw new RuntimeException('Handler failed');
+            }
+        };
+
+        $bus = new MessageBus([
+            new SiteAccessMiddleware($siteAccessService, $eventDispatcher),
+            new HandleMessageMiddleware(new HandlersLocator([stdClass::class => [$handler]])),
+        ]);
+
+        try {
+            $bus->dispatch(new Envelope(new stdClass(), [new SiteAccessStamp('stamped')]));
+            self::assertFalse($firstHandlerThrows);
+        } catch (HandlerFailedException $e) {
+            self::assertTrue($firstHandlerThrows);
+        }
+
+        $bus->dispatch(new Envelope(new stdClass()));
+
+        self::assertSame([$stamped, $original], $handledIn);
     }
 }

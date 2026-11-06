@@ -36,11 +36,24 @@ final class SiteAccessMiddleware implements MiddlewareInterface
         StackInterface $stack
     ): Envelope {
         $stamp = $envelope->last(SiteAccessStamp::class);
-        if ($stamp !== null) {
-            $siteAccess = $this->siteAccessService->get($stamp->siteAccess);
-            $this->eventDispatcher->dispatch(new ScopeChangeEvent($siteAccess), MVCEvents::CONFIG_SCOPE_CHANGE);
+        if ($stamp === null) {
+            return $stack->next()->handle($envelope, $stack);
         }
 
-        return $stack->next()->handle($envelope, $stack);
+        $previousSiteAccess = $this->siteAccessService->getCurrent();
+        $siteAccess = $this->siteAccessService->get($stamp->siteAccess);
+        $this->eventDispatcher->dispatch(new ScopeChangeEvent($siteAccess), MVCEvents::CONFIG_SCOPE_CHANGE);
+
+        try {
+            return $stack->next()->handle($envelope, $stack);
+        } finally {
+            // the consumer is long-lived, the next message must not inherit this scope
+            if ($previousSiteAccess !== null) {
+                $this->eventDispatcher->dispatch(
+                    new ScopeChangeEvent($previousSiteAccess),
+                    MVCEvents::CONFIG_SCOPE_RESTORE
+                );
+            }
+        }
     }
 }
