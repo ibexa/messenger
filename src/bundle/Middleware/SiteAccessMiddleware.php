@@ -16,6 +16,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Throwable;
 
 final class SiteAccessMiddleware implements MiddlewareInterface
 {
@@ -36,11 +37,37 @@ final class SiteAccessMiddleware implements MiddlewareInterface
         StackInterface $stack,
     ): Envelope {
         $stamp = $envelope->last(SiteAccessStamp::class);
-        if ($stamp !== null) {
-            $siteAccess = $this->siteAccessService->get($stamp->siteAccess);
-            $this->eventDispatcher->dispatch(new ScopeChangeEvent($siteAccess), MVCEvents::CONFIG_SCOPE_CHANGE);
+        if ($stamp === null) {
+            return $stack->next()->handle($envelope, $stack);
         }
 
-        return $stack->next()->handle($envelope, $stack);
+        $previousSiteAccess = $this->siteAccessService->getCurrent();
+        $siteAccess = $this->siteAccessService->get($stamp->siteAccess);
+
+        $handled = false;
+        try {
+            // inside the try, a throwing listener may leave the scope partly switched
+            $this->eventDispatcher->dispatch(new ScopeChangeEvent($siteAccess), MVCEvents::CONFIG_SCOPE_CHANGE);
+
+            $envelope = $stack->next()->handle($envelope, $stack);
+            $handled = true;
+
+            return $envelope;
+        } finally {
+            // the consumer is long-lived, the next message must not inherit this scope
+            if ($previousSiteAccess !== null) {
+                try {
+                    $this->eventDispatcher->dispatch(
+                        new ScopeChangeEvent($previousSiteAccess),
+                        MVCEvents::CONFIG_SCOPE_RESTORE
+                    );
+                } catch (Throwable $e) {
+                    // a failed handler's exception drives retries and the failure transport, don't replace it
+                    if ($handled) {
+                        throw $e;
+                    }
+                }
+            }
+        }
     }
 }
