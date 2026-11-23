@@ -66,7 +66,7 @@ jobs:
               run: composer run-script --timeout=600 test
 
     integration-tests-postgres:
-        name: PostgreSQL integration tests
+        name: PostgreSQL integration tests (${{ matrix.php }}${{ !matrix.schema_builder_event && ', Doctrine Migrations' || '' }})
         needs: tests
         services:
             postgres:
@@ -91,6 +91,12 @@ jobs:
                     - '7.4'
                     - '8.3'
                     - '8.4'
+                schema_builder_event:
+                    - true
+                # One more run, on the Doctrine Migrations install path.
+                include:
+                    -   php: '8.4'
+                        schema_builder_event: false
 
         steps:
             -   uses: actions/checkout@v7
@@ -111,6 +117,7 @@ jobs:
                 run: composer run-script --timeout=600 test-integration
                 env:
                     SEARCH_ENGINE: legacy
+                    IBEXA_TEST_SCHEMA_BUILDER_EVENT_ENABLED: ${{ matrix.schema_builder_event && '1' || '0' }}
                     DATABASE_URL: "pgsql://postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/testdb?server_version=10"
 
     integration-tests-mysql-redis:
@@ -176,7 +183,7 @@ jobs:
                     TEST_IBEXA_MESSENGER_LOCK_DSN: "redis://localhost:${{ job.services.redis.ports[6379] }}/"
 
     integration-tests-mysql:
-        name: MySQL integration tests
+        name: MySQL integration tests (${{ matrix.php }}${{ !matrix.schema_builder_event && ', Doctrine Migrations' || '' }})
         needs: tests
 
         services:
@@ -205,6 +212,12 @@ jobs:
                     - '7.4'
                     - '8.3'
                     - '8.4'
+                schema_builder_event:
+                    - true
+                # One more run, on the Doctrine Migrations install path.
+                include:
+                    -   php: '8.4'
+                        schema_builder_event: false
 
         steps:
             -   uses: actions/checkout@v7
@@ -225,4 +238,5 @@ jobs:
                 run: composer run-script --timeout=600 test-integration
                 env:
                     SEARCH_ENGINE: legacy
+                    IBEXA_TEST_SCHEMA_BUILDER_EVENT_ENABLED: ${{ matrix.schema_builder_event && '1' || '0' }}
                     DATABASE_URL: "mysql://mysql:mysql@127.0.0.1:${{ job.services.mysql.ports[3306] }}/testdb"
