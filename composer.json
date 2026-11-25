@@ -24,6 +24,7 @@
         "behat/behat": "^4.0",
         "dama/doctrine-test-bundle": "^8",
         "deptrac/deptrac": "^4.6",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
         "friends-of-behat/mink-extension": "^3.0@alpha",
         "ibexa/behat": "~6.0.x-dev",
         "ibexa/code-style": "~2.3.1",
