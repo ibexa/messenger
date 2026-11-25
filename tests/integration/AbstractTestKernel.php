@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace Ibexa\Tests\Integration\Messenger;
 
 use DAMA\DoctrineTestBundle\DAMADoctrineTestBundle;
+use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Ibexa\Bundle\CorePersistence\IbexaCorePersistenceBundle;
+use Ibexa\Bundle\DoctrineMigrations\IbexaDoctrineMigrationsBundle;
 use Ibexa\Bundle\Messenger\IbexaMessengerBundle;
 use Ibexa\Bundle\Test\Core\IbexaTestCoreBundle;
 use Ibexa\Contracts\Test\Core\IbexaTestKernel;
@@ -28,6 +30,9 @@ abstract class AbstractTestKernel extends IbexaTestKernel
         yield from parent::registerBundles();
 
         yield new IbexaTestCoreBundle();
+
+        yield new DoctrineMigrationsBundle();
+        yield new IbexaDoctrineMigrationsBundle();
 
         yield new IbexaCorePersistenceBundle();
         yield new DAMADoctrineTestBundle();
