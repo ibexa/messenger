@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use Ibexa\Contracts\Test\Core\Bootstrapper\Bootstrapper;
 use Ibexa\Contracts\Test\Core\Bootstrapper\PurgeSearchIndexHook;
+use Ibexa\Contracts\Test\Core\Bootstrapper\SchemaInstallPath;
 use Ibexa\Contracts\Test\Core\IbexaTestKernel;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -39,11 +40,8 @@ $kernelClass = (static function (): string {
     return $class;
 })();
 
-// Database preparation, schema import, and fixture import all stay at Bootstrapper's defaults
-// (enabled) to match this suite's actual needs: MessageBusTest exercises a real Doctrine messenger
-// transport backed by the `ibexa_messenger_messages` table from AbstractTestKernel::getSchemaFiles(),
-// so schema import can't be skipped here. Only the search index purge needs to be explicitly
-// requested, since PurgeSearchIndexHook defaults to off but the old bootstrap.php always purged.
+$doctrineMigrationsEnabled = getenv('IBEXA_TEST_SCHEMA_BUILDER_EVENT_ENABLED') === '0';
+
 (new Bootstrapper())->bootstrap($kernelClass, [
     PurgeSearchIndexHook::class => [PurgeSearchIndexHook::OPTION_PURGE_INDEX => true],
-]);
+] + SchemaInstallPath::getBootstrapperOptions($doctrineMigrationsEnabled));
