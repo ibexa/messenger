@@ -53,10 +53,6 @@ final class MessageBusTest extends IbexaKernelTestCase
         $eventDispatcher = self::getContainer()->get('event_dispatcher');
         self::assertInstanceOf(EventDispatcherInterface::class, $eventDispatcher);
         $this->eventDispatcher = $eventDispatcher;
-
-        // Clear any SiteAccess set by the kernel to prevent the subscriber from stamping
-        // envelopes with a SiteAccess name that may not exist in the provider.
-        $this->siteAccessService->setSiteAccess(null);
     }
 
     public function testBus(): void
@@ -132,7 +128,7 @@ final class MessageBusTest extends IbexaKernelTestCase
     public function testDispatchingMessageAddsSiteAccessStamp(): void
     {
         $siteAccess = new SiteAccess('__default_site_access__');
-        $this->siteAccessService->setSiteAccess($siteAccess);
+        $this->siteAccessService->changeSiteAccess($siteAccess);
 
         $this->bus->dispatch(new FooMessage());
 
@@ -152,8 +148,6 @@ final class MessageBusTest extends IbexaKernelTestCase
      */
     public function testDispatchingMessageWithoutSiteAccessDoesNotAddStamp(): void
     {
-        $this->siteAccessService->setSiteAccess(null);
-
         $this->bus->dispatch(new FooMessage());
 
         $messages = $this->getMessagesFromReceiver();
@@ -220,7 +214,7 @@ final class MessageBusTest extends IbexaKernelTestCase
     {
         // 1. Set current SiteAccess and dispatch
         $siteAccess = new SiteAccess('__default_site_access__');
-        $this->siteAccessService->setSiteAccess($siteAccess);
+        $this->siteAccessService->changeSiteAccess($siteAccess);
 
         $this->bus->dispatch(new FooMessage());
 
@@ -233,9 +227,9 @@ final class MessageBusTest extends IbexaKernelTestCase
         self::assertNotNull($stamp);
         self::assertSame('__default_site_access__', $stamp->siteAccess);
 
-        // 3. Clear current SiteAccess to simulate worker context
-        $this->siteAccessService->setSiteAccess(null);
-        self::assertNull($this->siteAccessService->getCurrent());
+        // 3. Go back to the uninitialized SiteAccess to simulate worker context
+        $this->siteAccessService->restoreSiteAccess();
+        self::assertSame(SiteAccess::MATCHING_TYPE_UNINITIALIZED, $this->siteAccessService->getCurrent()?->matchingType);
 
         // 4. Re-dispatch as received and verify scope change event fires
         $capturedEvents = [];

@@ -11,7 +11,6 @@ namespace Ibexa\Tests\Bundle\Messenger\Middleware;
 use Ibexa\Bundle\Messenger\Middleware\SiteAccessMiddleware;
 use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\Contracts\Messenger\Stamp\SiteAccessStamp;
-use Ibexa\Core\MVC\Symfony\Event\ScopeChangeEvent;
 use Ibexa\Core\MVC\Symfony\MVCEvents;
 use Ibexa\Core\MVC\Symfony\SiteAccess;
 use Ibexa\Core\MVC\Symfony\SiteAccess\SiteAccessProviderInterface;
@@ -29,13 +28,10 @@ use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class SiteAccessMiddlewareTest extends TestCase
 {
     private SiteAccessServiceInterface & MockObject $siteAccessService;
-
-    private EventDispatcherInterface & MockObject $eventDispatcher;
 
     private StackInterface & MockObject $stack;
 
@@ -44,15 +40,11 @@ final class SiteAccessMiddlewareTest extends TestCase
     private function setUpMocks(): void
     {
         $this->siteAccessService = $this->createMock(SiteAccessServiceInterface::class);
-        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->stack = $this->createMock(StackInterface::class);
-        $this->middleware = new SiteAccessMiddleware(
-            $this->siteAccessService,
-            $this->eventDispatcher,
-        );
+        $this->middleware = new SiteAccessMiddleware($this->siteAccessService);
     }
 
-    public function testHandleDispatchesScopeChangeWhenSiteAccessStampExists(): void
+    public function testHandleChangesAndRestoresSiteAccessWhenSiteAccessStampExists(): void
     {
         $this->setUpMocks();
 
@@ -66,17 +58,15 @@ final class SiteAccessMiddlewareTest extends TestCase
             ->with('my_site')
             ->willReturn($siteAccess);
 
-        $this->eventDispatcher
+        $this->siteAccessService
             ->expects($this->once())
-            ->method('dispatch')
-            ->with(
-                self::callback(static function (ScopeChangeEvent $event) use ($siteAccess): bool {
-                    self::assertSame($siteAccess, $event->getSiteAccess());
+            ->method('changeSiteAccess')
+            ->with($siteAccess)
+            ->willReturn($siteAccess);
 
-                    return true;
-                }),
-                MVCEvents::CONFIG_SCOPE_CHANGE,
-            );
+        $this->siteAccessService
+            ->expects($this->once())
+            ->method('restoreSiteAccess');
 
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
@@ -92,7 +82,7 @@ final class SiteAccessMiddlewareTest extends TestCase
         $this->middleware->handle($envelope, $this->stack);
     }
 
-    public function testHandleDoesNotDispatchScopeChangeWhenNoSiteAccessStamp(): void
+    public function testHandleDoesNotChangeSiteAccessWhenNoSiteAccessStamp(): void
     {
         $this->setUpMocks();
 
@@ -102,9 +92,13 @@ final class SiteAccessMiddlewareTest extends TestCase
             ->expects($this->never())
             ->method('get');
 
-        $this->eventDispatcher
+        $this->siteAccessService
             ->expects($this->never())
-            ->method('dispatch');
+            ->method('changeSiteAccess');
+
+        $this->siteAccessService
+            ->expects($this->never())
+            ->method('restoreSiteAccess');
 
         $nextMiddleware = $this->createMock(MiddlewareInterface::class);
         $nextMiddleware
@@ -144,16 +138,18 @@ final class SiteAccessMiddlewareTest extends TestCase
         $provider->method('isDefined')->willReturn(true);
         $provider->method('getSiteAccess')->willReturnMap([['stamped', $stamped]]);
 
-        $siteAccessService = new SiteAccessService($provider, self::createStub(ConfigResolverInterface::class));
-        $siteAccessService->setSiteAccess($original);
-
         $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addSubscriber($siteAccessService);
+        $siteAccessService = new SiteAccessService(
+            $provider,
+            self::createStub(ConfigResolverInterface::class),
+            $eventDispatcher,
+            $original,
+        );
         if ($scopeChangeListenerThrows) {
-            // runs after SiteAccessService has already switched
+            // SiteAccessService has already switched when its event is dispatched
             $eventDispatcher->addListener(MVCEvents::CONFIG_SCOPE_CHANGE, static function (): void {
                 throw new RuntimeException('Scope change listener failed');
-            }, -10);
+            });
         }
 
         $handledIn = [];
@@ -165,7 +161,7 @@ final class SiteAccessMiddlewareTest extends TestCase
         };
 
         $bus = new MessageBus([
-            new SiteAccessMiddleware($siteAccessService, $eventDispatcher),
+            new SiteAccessMiddleware($siteAccessService),
             new HandleMessageMiddleware(new HandlersLocator([stdClass::class => [$handler]])),
         ]);
 
@@ -199,11 +195,13 @@ final class SiteAccessMiddlewareTest extends TestCase
         $provider->method('isDefined')->willReturn(true);
         $provider->method('getSiteAccess')->willReturn(new SiteAccess('stamped'));
 
-        $siteAccessService = new SiteAccessService($provider, self::createStub(ConfigResolverInterface::class));
-        $siteAccessService->setSiteAccess(new SiteAccess('original'));
-
         $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addSubscriber($siteAccessService);
+        $siteAccessService = new SiteAccessService(
+            $provider,
+            self::createStub(ConfigResolverInterface::class),
+            $eventDispatcher,
+            new SiteAccess('original'),
+        );
         $eventDispatcher->addListener(MVCEvents::CONFIG_SCOPE_RESTORE, static function (): void {
             throw new RuntimeException('Restore failed');
         });
@@ -215,7 +213,7 @@ final class SiteAccessMiddlewareTest extends TestCase
         };
 
         $bus = new MessageBus([
-            new SiteAccessMiddleware($siteAccessService, $eventDispatcher),
+            new SiteAccessMiddleware($siteAccessService),
             new HandleMessageMiddleware(new HandlersLocator([stdClass::class => [$handler]])),
         ]);
 
